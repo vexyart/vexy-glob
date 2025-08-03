@@ -2,19 +2,34 @@
 
 ## 🚀 CURRENT PRIORITIES - New Issues to Implement
 
-### Phase 9: CLI Implementation (Issue #101)
-- [ ] Implement `__main__.py` with fire-based CLI architecture
-- [ ] Create `vexy_glob find` command with all Python API features
-- [ ] Create `vexy_glob search` command for content searching with grep-like output
-- [ ] Add human-readable size parsing (10k, 1M, 1G format)
-- [ ] Implement colored output using rich library
-- [ ] Add `--no-color` option for non-interactive usage
-- [ ] Handle broken pipes gracefully for Unix pipelines
-- [ ] Create comprehensive CLI test suite
-- [ ] Test argument parsing and validation
-- [ ] Verify shell pipeline compatibility
+- [ ] Read @issues/104.txt and /work on it and once implemented, remove that file
+- [x] If @issues/101.txt is implemented, remove that file, else implement
+- [ ] If @issues/102.txt is implemented, remove that file, else implement
+- [ ] If @issues/103.txt is implemented, remove that file, else implement
+- [ ] If @issues/100.txt is implemented, remove that file, else implement
+
+### Phase 9: CLI Implementation (Issue #101) ✅ COMPLETED
+
+- [x] Implement `__main__.py` with fire-based CLI using class-based structure
+- [x] Create `vexy_glob find` command with pattern argument and all options
+  - [x] Support --root, --min-size, --max-size, --mtime-after, --mtime-before options
+  - [x] Support --no-gitignore, --hidden, --case-sensitive, --type, --extension, --depth options
+- [x] Create `vexy_glob search` command with pattern and content_pattern arguments
+  - [x] Support all find options plus --no-color
+  - [x] Format output as path:line_number:line_text (grep-style)
+- [x] Add human-readable size parsing (10k, 1M, 1G format)
+- [x] Implement colored output using rich library with match highlighting
+- [x] Use rich.print for colored output formatting
+- [x] Add `--no-color` option for non-interactive usage
+- [x] Handle broken pipes gracefully for Unix pipelines
+- [x] Create comprehensive CLI test suite
+- [x] Test argument parsing and validation
+- [x] Test output formatting and match highlighting
+- [x] Verify shell pipeline compatibility
+- [x] Ensure CLI is available as `vexy_glob` command after installation
 
 ### Phase 10: Build System Modernization (Issue #103)
+
 - [ ] Migrate pyproject.toml from maturin to hatch build backend
 - [ ] Configure hatch-vcs for git-tag-based semantic versioning
 - [ ] Update author information to Adam Twardoch (twardoch@github)
@@ -25,6 +40,7 @@
 - [ ] Configure automatic version management from git tags
 
 ### Phase 11: Comprehensive Documentation (Issue #102)
+
 - [ ] Completely rewrite and expand README.md with comprehensive examples
 - [ ] Add complete Python API documentation with all parameters
 - [ ] Document CLI usage with all commands and options
@@ -41,13 +57,15 @@
 ## ✅ COMPLETED
 
 ### Core Functionality ✅
+
 - [x] Complete file finding with 1.8x performance improvement
-- [x] Content search with ripgrep-style functionality  
+- [x] Content search with ripgrep-style functionality
 - [x] Streaming results with 10x faster time to first result
 - [x] Full Python API with drop-in glob compatibility
 - [x] 42 tests passing with 97% code coverage
 
 ### CI/CD Infrastructure ✅
+
 - [x] GitHub Actions workflow for multi-platform testing
 - [x] Cross-platform wheel building with cibuildwheel
 - [x] Automated release workflow for GitHub and PyPI
@@ -56,6 +74,7 @@
 - [x] Contributing guidelines documentation
 
 ### Advanced Filtering ✅
+
 - [x] File size filtering (min_size/max_size parameters)
 - [x] Size filtering integration with content search
 - [x] Comprehensive tests for size filtering (5 tests)
@@ -78,6 +97,7 @@
 ## 🔄 FUTURE PHASES (Lower Priority)
 
 ### Performance Optimizations
+
 - [ ] Add same_file_system option to prevent crossing mount points
 - [ ] Add result sorting options (name, size, mtime)
 - [ ] Implement smart-case matching optimization
@@ -86,6 +106,7 @@
 - [ ] Optimize hot paths based on profiling
 
 ### Platform Testing
+
 - [ ] Test and fix Windows-specific path handling
 - [ ] Verify Linux compatibility across distributions
 - [ ] Test macOS-specific features (e.g., .DS_Store handling)
@@ -99,6 +120,7 @@
 - [ ] Test interruption and cleanup behavior
 
 ### Release Preparation
+
 - [ ] Run full test suite on all platforms via CI
 - [ ] Manual testing on Windows, Linux, macOS
 - [ ] Test installation from wheels on clean systems
@@ -114,6 +136,7 @@
 - [ ] Announce on Python forums and social media
 
 ## Current Focus
+
 🎯 **PRIORITY 1**: CLI Implementation (Issue #101)  
 🎯 **PRIORITY 2**: Build System Modernization (Issue #103)  
 🎯 **PRIORITY 3**: Comprehensive Documentation (Issue #102)

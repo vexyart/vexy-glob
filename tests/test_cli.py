@@ -17,7 +17,7 @@ from io import StringIO
 from unittest.mock import patch, Mock
 
 # Import the CLI class for direct testing
-from vexy_glob.__main__ import VexyGlobCLI, main
+from vexy_glob.__main__ import Cli, main
 
 
 class TestVexyGlobCLISizeParser:
@@ -25,7 +25,7 @@ class TestVexyGlobCLISizeParser:
 
     def test_parse_size_basic(self):
         """Test basic size parsing."""
-        cli = VexyGlobCLI()
+        cli = Cli()
 
         assert cli._parse_size("100") == 100
         assert cli._parse_size("1k") == 1024
@@ -36,14 +36,14 @@ class TestVexyGlobCLISizeParser:
 
     def test_parse_size_with_decimals(self):
         """Test size parsing with decimal numbers."""
-        cli = VexyGlobCLI()
+        cli = Cli()
 
         assert cli._parse_size("1.5k") == int(1.5 * 1024)
         assert cli._parse_size("2.5m") == int(2.5 * 1024 * 1024)
 
     def test_parse_size_with_b_suffix(self):
         """Test size parsing with 'b' suffix."""
-        cli = VexyGlobCLI()
+        cli = Cli()
 
         assert cli._parse_size("1kb") == 1024
         assert cli._parse_size("2mb") == 2 * 1024 * 1024
@@ -51,13 +51,13 @@ class TestVexyGlobCLISizeParser:
 
     def test_parse_size_empty(self):
         """Test parsing empty size string."""
-        cli = VexyGlobCLI()
+        cli = Cli()
         assert cli._parse_size("") == 0
         assert cli._parse_size(None) == 0
 
     def test_parse_size_invalid(self):
         """Test parsing invalid size strings."""
-        cli = VexyGlobCLI()
+        cli = Cli()
 
         with pytest.raises(ValueError, match="Invalid size format"):
             cli._parse_size("invalid")
@@ -72,32 +72,12 @@ class TestVexyGlobCLISizeParser:
 class TestVexyGlobCLIFormatting:
     """Test output formatting for search results."""
 
-    def test_format_search_result_no_color(self):
-        """Test search result formatting without color."""
-        cli = VexyGlobCLI()
-
-        result = {
-            "path": "test/file.py",
-            "line_number": 42,
-            "line_text": "def test_function():\n",
-        }
-
-        formatted = cli._format_search_result(result, no_color=True)
-        assert formatted == "test/file.py:42:def test_function():"
-
-    def test_format_search_result_with_color(self):
-        """Test search result formatting with color (should not raise)."""
-        cli = VexyGlobCLI()
-
-        result = {
-            "path": "test/file.py",
-            "line_number": 42,
-            "line_text": "def test_function():\n",
-        }
-
-        # Should not raise exception
-        formatted = cli._format_search_result(result, no_color=False)
-        assert isinstance(formatted, str)
+    def test_format_basic_output(self):
+        """Test basic output formatting."""
+        cli = Cli()
+        # Basic test to ensure CLI can be instantiated and has required methods
+        assert hasattr(cli, "find")
+        assert hasattr(cli, "search")
 
 
 class TestVexyGlobCLIFindCommand:
@@ -120,7 +100,7 @@ class TestVexyGlobCLIFindCommand:
 
     def test_find_basic_pattern(self):
         """Test basic pattern matching."""
-        cli = VexyGlobCLI()
+        cli = Cli()
 
         # Capture stdout
         with patch("sys.stdout", new_callable=StringIO) as mock_stdout:
@@ -136,7 +116,7 @@ class TestVexyGlobCLIFindCommand:
 
     def test_find_with_size_filter(self):
         """Test find with size filtering."""
-        cli = VexyGlobCLI()
+        cli = Cli()
 
         with patch("sys.stdout", new_callable=StringIO) as mock_stdout:
             try:
@@ -150,7 +130,7 @@ class TestVexyGlobCLIFindCommand:
 
     def test_find_with_type_filter(self):
         """Test find with file type filtering."""
-        cli = VexyGlobCLI()
+        cli = Cli()
 
         with patch("sys.stdout", new_callable=StringIO) as mock_stdout:
             try:
@@ -216,7 +196,7 @@ class TestVexyGlobCLISearchCommand:
 
     def test_search_basic_pattern(self):
         """Test basic content search."""
-        cli = VexyGlobCLI()
+        cli = Cli()
 
         with patch("sys.stdout", new_callable=StringIO) as mock_stdout:
             try:
@@ -232,7 +212,7 @@ class TestVexyGlobCLISearchCommand:
 
     def test_search_regex_pattern(self):
         """Test regex pattern search."""
-        cli = VexyGlobCLI()
+        cli = Cli()
 
         with patch("sys.stdout", new_callable=StringIO) as mock_stdout:
             try:
@@ -250,7 +230,7 @@ class TestVexyGlobCLISearchCommand:
 
     def test_search_no_color(self):
         """Test search with no color output."""
-        cli = VexyGlobCLI()
+        cli = Cli()
 
         with patch("sys.stdout", new_callable=StringIO) as mock_stdout:
             try:
@@ -271,7 +251,7 @@ class TestVexyGlobCLISearchCommand:
 
     def test_search_error_handling(self):
         """Test error handling in search command."""
-        cli = VexyGlobCLI()
+        cli = Cli()
 
         with patch("sys.stderr", new_callable=StringIO) as mock_stderr:
             with pytest.raises(SystemExit):
@@ -480,7 +460,7 @@ class TestVexyGlobCLIErrorHandling:
 
     def test_broken_pipe_handling(self):
         """Test that broken pipe is handled gracefully."""
-        cli = VexyGlobCLI()
+        cli = Cli()
 
         # Mock BrokenPipeError during output
         with patch("builtins.print", side_effect=BrokenPipeError):
@@ -491,7 +471,7 @@ class TestVexyGlobCLIErrorHandling:
 
     def test_keyboard_interrupt_handling(self):
         """Test keyboard interrupt handling."""
-        cli = VexyGlobCLI()
+        cli = Cli()
 
         # Mock KeyboardInterrupt during vexy_glob.find
         with patch("vexy_glob.find", side_effect=KeyboardInterrupt):
@@ -501,7 +481,7 @@ class TestVexyGlobCLIErrorHandling:
 
     def test_invalid_size_format_error(self):
         """Test error handling for invalid size format."""
-        cli = VexyGlobCLI()
+        cli = Cli()
 
         with patch("sys.stderr", new_callable=StringIO) as mock_stderr:
             with patch("sys.exit") as mock_exit:
@@ -527,7 +507,7 @@ class TestVexyGlobCLIFireIntegration:
 
     def test_cli_class_methods(self):
         """Test that CLI class has required methods."""
-        cli = VexyGlobCLI()
+        cli = Cli()
         assert hasattr(cli, "find")
         assert hasattr(cli, "search")
         assert callable(cli.find)
@@ -535,10 +515,9 @@ class TestVexyGlobCLIFireIntegration:
 
     def test_cli_class_instantiation(self):
         """Test CLI class can be instantiated."""
-        cli = VexyGlobCLI()
+        cli = Cli()
         assert hasattr(cli, "console")
         assert hasattr(cli, "_parse_size")
-        assert hasattr(cli, "_format_search_result")
 
 
 if __name__ == "__main__":

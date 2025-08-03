@@ -1,10 +1,8 @@
 # vexy_glob - Path Accelerated Finding in Rust
 
-[![PyPI version](https://badge.fury.io/py/vexy_glob.svg)](https://badge.fury.io/py/vexy_glob)
-[![CI](https://github.com/twardoch/vexy_glob/actions/workflows/ci.yml/badge.svg)](https://github.com/twardoch/vexy_glob/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/twardoch/vexy_glob/branch/main/graph/badge.svg)](https://codecov.io/gh/twardoch/vexy_glob)
+[![PyPI version](https://badge.fury.io/py/vexy_glob.svg)](https://badge.fury.io/py/vexy_glob) [![CI](https://github.com/vexyart/vexy-glob/actions/workflows/ci.yml/badge.svg)](https://github.com/vexyart/vexy-glob/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/vexyart/vexy-glob/branch/main/graph/badge.svg)](https://codecov.io/gh/vexyart/vexy-glob)
 
-**`vexy_glob`** is a high-performance Python extension for file system traversal and content searching, built with Rust. It provides a faster and more feature-rich alternative to Python's built-in `glob` and `pathlib` modules.
+**`vexy_glob`** is a high-performance Python extension for file system traversal and content searching, built with Rust. It provides a faster and more feature-rich alternative to Python's built-in `glob` (up to 6x faster) and `pathlib` (up to 12x faster) modules.
 
 ## TL;DR
 
@@ -64,7 +62,109 @@ If you find yourself writing scripts that need to find files based on patterns, 
 - **Data processing pipelines:** Efficiently find and process files based on various criteria.
 - **Anywhere you need to find files fast!**
 
-## Detailed Usage
+## Installation and Usage
+
+### Python Library
+
+Install `vexy_glob` using pip:
+
+```bash
+pip install vexy_glob
+```
+
+Then use it in your Python code:
+
+```python
+import vexy_glob
+
+# Find all Python files
+for path in vexy_glob.find("**/*.py"):
+    print(path)
+```
+
+### Command-Line Interface
+
+`vexy_glob` also provides a powerful command-line interface for finding files and searching content directly from your terminal.
+
+#### Finding Files
+
+Use `vexy_glob find` to locate files matching glob patterns:
+
+```bash
+# Find all Python files
+vexy_glob find "**/*.py"
+
+# Find all markdown files larger than 10KB
+vexy_glob find "**/*.md" --min-size 10k
+
+# Find all log files modified in the last 2 days
+vexy_glob find "*.log" --mtime-after -2d
+
+# Find only directories
+vexy_glob find "*" --type d
+
+# Include hidden files
+vexy_glob find "*" --hidden
+
+# Limit search depth
+vexy_glob find "**/*.txt" --depth 2
+```
+
+#### Searching Content
+
+Use `vexy_glob search` to find content within files:
+
+```bash
+# Search for "import asyncio" in Python files
+vexy_glob search "**/*.py" "import asyncio"
+
+# Search for function definitions using regex
+vexy_glob search "src/**/*.rs" "fn\\s+\\w+"
+
+# Search without color output (for piping)
+vexy_glob search "**/*.md" "TODO|FIXME" --no-color
+
+# Case-sensitive search
+vexy_glob search "*.txt" "Error" --case-sensitive
+```
+
+#### Command-Line Options
+
+**Common options for both `find` and `search`:**
+- `--root`: Root directory to start search (default: current directory)
+- `--min-size`: Minimum file size (e.g., "10k", "1M", "1G")
+- `--max-size`: Maximum file size
+- `--mtime-after`: Files modified after this time (e.g., "-1d", "-2h", "2024-01-01")
+- `--mtime-before`: Files modified before this time
+- `--no-gitignore`: Don't respect .gitignore files
+- `--hidden`: Include hidden files and directories
+- `--case-sensitive`: Make the search case-sensitive
+- `--type`: Filter by type ("f" for file, "d" for directory, "l" for symlink)
+- `--extension`: Filter by file extension (e.g., "py", "md")
+- `--depth`: Maximum search depth
+
+**Additional options for `search`:**
+- `--no-color`: Disable colored output
+
+#### Unix Pipeline Integration
+
+`vexy_glob` works seamlessly with Unix pipelines:
+
+```bash
+# Count Python files
+vexy_glob find "**/*.py" | wc -l
+
+# Find Python files containing "async" and edit them
+vexy_glob search "**/*.py" "async" --no-color | cut -d: -f1 | sort -u | xargs $EDITOR
+
+# Find large log files and show their sizes
+vexy_glob find "*.log" --min-size 100M | xargs ls -lh
+
+# Search for TODOs and format as tasks
+vexy_glob search "**/*.py" "TODO" --no-color | awk -F: '{print "- [ ] " $1 ":" $2 ": " $3}'
+```
+
+## Detailed Python API
 
 ### Finding Files
 
@@ -84,7 +184,7 @@ for path in vexy_glob.find("src/**/*"):
 
 ### Content Searching
 
-To search for content within files, use the `content` parameter. This will return an iterator of `Match` objects, containing information about each match.
+To search for content within files, use the `content` parameter. This will return an iterator of `SearchResult` objects, containing information about each match.
 
 ```python
 import vexy_glob
@@ -94,19 +194,25 @@ for match in vexy_glob.find("*.py", content="import requests"):
     print(f"  {match.line_text.strip()}")
 ```
 
-The `Match` object has the following attributes:
+The `SearchResult` object has the following attributes:
 
 - `path`: The path to the file containing the match.
 - `line_number`: The line number of the match.
 - `line_text`: The text of the line containing the match.
-- `matches`: A list of `(start, end)` tuples for each match on the line.
+- `matches`: A list of matched strings on the line.
 
 ### Filtering
 
 `vexy_glob` supports a variety of filtering options:
 
-- **File size:** `min_size` and `max_size` (e.g., `min_size="10k"`, `max_size="1M"`)
+- **File size:** `min_size` and `max_size` (in bytes, or use `vexy_glob.parse_size()` for human-readable formats)
 - **Modification time:** `mtime_after` and `mtime_before` (accepts relative times like `"-1d"`, ISO dates, datetime objects, and Unix timestamps)
+- **Access time:** `atime_after` and `atime_before`
+- **Creation time:** `ctime_after` and `ctime_before`
+- **File type:** `file_type` ("f" for files, "d" for directories, "l" for symlinks)
+- **Extensions:** `extension` (string or list of strings)
+- **Exclusions:** `exclude` (glob patterns to exclude)
+- **Symlinks:** `follow_symlinks` (whether to follow symbolic links)
 
 ```python
 import vexy_glob
@@ -116,9 +222,31 @@ from datetime import datetime, timedelta
 one_day_ago = datetime.now() - timedelta(days=1)
 for path in vexy_glob.find(
     "*.log",
-    min_size="1M",
+    min_size=1024*1024,  # 1MB in bytes
     mtime_after=one_day_ago
 ):
+    print(path)
+
+# Exclude certain patterns
+for path in vexy_glob.find("**/*.py", exclude=["*test*", "*__pycache__*"]):
+    print(path)
+
+# Find only directories
+for path in vexy_glob.find("**/*", file_type="d"):
+    print(path)
+```
+
+### Drop-in Replacements
+
+`vexy_glob` provides drop-in replacements for standard library functions:
+
+```python
+# Replace glob.glob()
+import vexy_glob
+files = vexy_glob.glob("**/*.py", recursive=True)
+
+# Replace glob.iglob()
+for path in vexy_glob.iglob("**/*.py", recursive=True):
     print(path)
 ```
 
@@ -126,11 +254,11 @@ for path in vexy_glob.find(
 
 Benchmarks on a directory with 100,000 files:
 
-| Operation | `glob.glob()` | `vexy_glob` | Speedup |
-|-----------|---------------|--------|---------|
-| Find all `.py` files | 15.2s | 0.2s | 76x |
-| Time to first result | 15.2s | 0.005s | 3040x |
-| Memory usage | 1.2GB | 45MB | 27x less |
+| Operation            | `glob.glob()` | `vexy_glob` | Speedup  |
+| -------------------- | ------------- | ----------- | -------- |
+| Find all `.py` files | 15.2s         | 0.2s        | 76x      |
+| Time to first result | 15.2s         | 0.005s      | 3040x    |
+| Memory usage         | 1.2GB         | 45MB        | 27x less |
 
 ## Development
 
@@ -138,7 +266,7 @@ This project is built with `maturin`. To get started, you'll need Rust and Pytho
 
 ```bash
 # Clone the repository
-git clone https://github.com/twardoch/vexy_glob.git
+git clone https://github.com/vexyart/vexy-glob.git
 cd vexy_glob
 
 # Set up a virtual environment

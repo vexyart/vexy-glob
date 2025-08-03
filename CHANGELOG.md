@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **NEW: Command-Line Interface (CLI)** ✅
+  - `vexy_glob find` command for finding files with all Python API features
+  - `vexy_glob search` command for content searching with grep-like output  
+  - Human-readable size parsing (10k, 1M, 1G format)
+  - Colored output using rich library with match highlighting
+  - `--no-color` option for non-interactive usage and pipelines
+  - Broken pipe handling for Unix pipeline compatibility
+  - Comprehensive CLI test suite with 100+ tests
 - Initial project structure and configuration with Rust and Python components
 - Complete Rust library with PyO3 bindings for high-performance file finding
 - Integration with `ignore` crate for parallel, gitignore-aware directory traversal
