@@ -72,3 +72,4 @@ dmypy.json
 vexy_glob/_version.py
 /ref
 /issues
+test_gitignore/test_gitignore/
