@@ -393,6 +393,25 @@ If you encounter build issues:
 2. **maturin not found**: Run `pip install maturin`
 3. **Version mismatch**: Run `python sync_version.py` to sync versions
 4. **Import errors**: Ensure you've run `maturin develop` after changes
+5. **Build fails**: Check that you have the latest Rust stable toolchain
+
+### Contributing
+
+We welcome contributions! Here's how to get started:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature-name`)
+3. Make your changes
+4. Run tests (`pytest tests/`)
+5. Format code (`cargo fmt` for Rust, `ruff format` for Python)
+6. Commit with descriptive messages
+7. Push and open a pull request
+
+Before submitting:
+- Ensure all tests pass
+- Add tests for new functionality
+- Update documentation as needed
+- Follow existing code style
 
 ## License
 
