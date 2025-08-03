@@ -73,3 +73,5 @@ vexy_glob/_version.py
 /ref
 /issues
 test_gitignore/test_gitignore/
+
+_version.py

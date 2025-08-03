@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = { text = "MIT" }
 authors = [
-  { name = "Fontlab Ltd.", email = "opensource@vexy.art" },
+  { name = "Adam Twardoch", email = "adam+github@twardoch.com" },
 ]
 keywords = ["filesystem", "find", "glob", "parallel", "rust", "search"]
 classifiers = [
@@ -38,7 +38,7 @@ dependencies = [
 vg = "vexy_glob.__main__:main"
 
 [build-system]
-requires = ["hatchling", "hatch-vcs"]
+requires = ["hatchling", "hatch-vcs", "maturin>=1.9.2"]
 build-backend = "hatchling.build"
 
 [tool.cibuildwheel]
@@ -66,8 +66,8 @@ version-file = "_version.py"
 [tool.hatch.build.targets.wheel]
 packages = ["vexy_glob"]
 
-[tool.hatch.build.targets.wheel.hooks.maturin]
-[tool.hatch.build.targets.sdist.hooks.maturin]
+[tool.hatch.build.hooks.custom]
+path = "build_hook.py"
 
 [tool.hatch.envs.default]
 dependencies = [

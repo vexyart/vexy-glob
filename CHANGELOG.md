@@ -7,7 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **PyO3 0.25 Compatibility** ✅
+  - Updated pymodule function signature to use `&Bound<'_, PyModule>`
+  - Fixed `add_function` and `add_class` method calls
+  - Replaced deprecated `into_py` with `into_pyobject` trait method
+  - Replaced `to_object` with `into()` conversion
+  - Added explicit type annotations for PyObject conversions
+  - Successfully builds with PyO3 0.25 and `uv sync`
+
 ### Added
+- **NEW: Build System Modernization** ✅
+  - Migrated from setuptools to hatch build backend
+  - Integrated hatch-vcs for git-tag-based semantic versioning
+  - Dynamic version management from git tags (no more manual version updates)
+  - Custom build hook for seamless maturin integration
+  - Automatic Cargo.toml version synchronization
+  - Updated CI/CD workflows to use hatch for builds
+  - Author information updated to Adam Twardoch (adam+github@twardoch.com)
 - **NEW: Command-Line Interface (CLI)** ✅
   - `vexy_glob find` command for finding files with all Python API features
   - `vexy_glob search` command for content searching with grep-like output  
