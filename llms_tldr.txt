@@ -1,0 +1,24 @@
+**TLDR for vexy_glob Codebase**
+
+`vexy_glob` is a high-performance Python library, with its core implemented in Rust, designed to be a significantly faster and more feature-rich alternative to Python's built-in `glob` and `pathlib` modules for file system traversal and content searching.
+
+**Core Functionality & Architecture:**
+
+*   **Hybrid Python/Rust Architecture:** It combines a user-friendly Python API (`vexy_glob/__init__.py`) with a high-performance Rust backend (`src/lib.rs`). Communication between the two is handled by `PyO3`.
+*   **High-Performance File Finding:** The Rust core uses the `ignore` crate for extremely fast, parallel, and gitignore-aware directory traversal. It employs a producer-consumer model with `crossbeam-channel` to stream results back to Python, ensuring low, constant memory usage and providing the first results almost instantly.
+*   **Advanced Content Searching:** It integrates the power of `ripgrep`'s `grep-searcher` crate to perform fast, regex-based content searches within files, similar to modern tools like `rg`.
+*   **Rich Filtering Capabilities:** Beyond simple glob patterns (handled by the `globset` crate), it supports a wide array of filters including file size, modification/access/creation times (with human-readable formats), file types, and custom exclude patterns.
+*   **Build & Versioning System:** The project has been modernized to use `maturin` as its build backend, which is ideal for Rust-based Python extensions. Versioning is managed via git tags using `setuptools-scm`, with a `sync_version.py` script to keep `Cargo.toml` and `pyproject.toml` in sync.
+
+**Development, Testing, and CI/CD:**
+
+*   **Robust CI/CD Pipeline:** The project uses GitHub Actions for a comprehensive CI/CD setup. This includes:
+    *   **Testing:** Running tests on Linux, macOS, and Windows across a matrix of Python versions (3.8-3.12). Both Python (`pytest`) and Rust (`cargo test`) test suites are executed.
+    *   **Code Quality:** Enforcing code quality with `ruff` for Python and `cargo clippy`/`cargo fmt` for Rust.
+    *   **Builds & Releases:** Automatically building cross-platform wheels and source distributions using `cibuildwheel` and `maturin`.
+    *   **Publishing:** Automating releases to PyPI when a new version tag is pushed.
+    *   **Code Coverage:** Tracking test coverage for both Rust and Python code using `Codecov`.
+*   **Dependency Management:** `Dependabot` is configured to keep both Rust (`cargo`) and GitHub Actions dependencies up-to-date.
+*   **Comprehensive Documentation:** The project maintains detailed documentation for developers and users, including a `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, and specific instructions for AI agents (`CLAUDE.md`, `GEMINI.md`).
+
+**Key Takeaway:** `vexy_glob` is a well-engineered, robust, and heavily-tested library that solves the common problem of slow file system operations in Python by leveraging Rust's performance. Its architecture is designed for speed, efficiency, and scalability, and it is supported by a modern and automated development infrastructure.

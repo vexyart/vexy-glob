@@ -6,13 +6,13 @@ use pyo3::types::PyDict;
 use ignore::{WalkBuilder, WalkState, DirEntry};
 use globset::{GlobSet, GlobSetBuilder};
 use crossbeam_channel::{bounded, Receiver};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::fs::File;
 use std::time::SystemTime;
 use anyhow::Result;
 use grep_searcher::{Searcher, Sink, SinkMatch};
-use grep_regex::RegexMatcher;
+use grep_regex::{RegexMatcher, RegexMatcherBuilder};
 
 /// Main module definition for vexy_glob
 #[pymodule]
@@ -38,6 +38,35 @@ enum FindResult {
     Path(PathBuf),
     Search(SearchResultRust),
     Error(String),
+}
+
+/// Buffer configuration for channel capacity optimization
+struct BufferConfig {
+    /// Channel capacity for results
+    channel_capacity: usize,
+}
+
+impl BufferConfig {
+    /// Get optimal channel capacity based on workload characteristics
+    fn for_workload(is_content_search: bool, has_sorting: bool, thread_count: usize) -> Self {
+        if is_content_search {
+            // Content search produces results more slowly, smaller channel is sufficient
+            BufferConfig {
+                channel_capacity: 500,
+            }
+        } else if has_sorting {
+            // Sorting requires collecting all results, larger channel capacity helps
+            BufferConfig {
+                channel_capacity: 10_000,
+            }
+        } else {
+            // Standard file finding - scale with thread count for better parallelism
+            // More threads = potentially more concurrent file discoveries
+            BufferConfig {
+                channel_capacity: 1000 * thread_count.max(1).min(8), // Cap at 8000 for memory
+            }
+        }
+    }
 }
 
 /// Python iterator class for streaming results
@@ -181,9 +210,11 @@ impl Sink for SearchSink {
     no_global_ignore = false,
     custom_ignore_files = None,
     follow_symlinks = false,
+    same_file_system = false,
     case_sensitive_glob = true,
     as_path_objects = false,
     yield_results = true,
+    sort = None,
     threads = 0
 ))]
 fn find(
@@ -208,14 +239,16 @@ fn find(
     no_global_ignore: bool,
     custom_ignore_files: Option<Vec<String>>,
     follow_symlinks: bool,
+    same_file_system: bool,
     case_sensitive_glob: bool,
     as_path_objects: bool,
     yield_results: bool,
+    sort: Option<String>,
     threads: usize,
 ) -> PyResult<PyObject> {
-    // Build glob pattern matcher
-    let glob_set = if let Some(pattern) = glob {
-        Some(build_glob_set(&[pattern], case_sensitive_glob)
+    // Build glob pattern matcher with literal optimization
+    let pattern_matcher = if let Some(pattern) = glob {
+        Some(PatternMatcher::new(&pattern, case_sensitive_glob)
             .map_err(|e| PyValueError::new_err(format!("Invalid glob pattern: {}", e)))?)
     } else {
         None
@@ -249,8 +282,14 @@ fn find(
         _ => None,
     });
     
-    // Create channel for results
-    let (tx, rx) = bounded::<FindResult>(1000);
+    // Force collection when sorting is requested
+    let actual_yield_results = yield_results && sort.is_none();
+    
+    // Get optimal buffer configuration
+    let buffer_config = BufferConfig::for_workload(false, sort.is_some(), threads);
+    
+    // Create channel for results with optimal capacity
+    let (tx, rx) = bounded::<FindResult>(buffer_config.channel_capacity);
     
     // Build the walker
     let mut builder = WalkBuilder::new(&paths[0]);
@@ -268,6 +307,7 @@ fn find(
         .git_global(!no_global_ignore)  // respect global gitignore
         .git_exclude(!no_ignore)  // respect .git/info/exclude
         .follow_links(follow_symlinks)  // follow symbolic links
+        .same_file_system(same_file_system)  // don't cross filesystem boundaries
         .max_depth(max_depth)
         .threads(if threads == 0 { num_cpus::get() } else { threads });
     
@@ -291,7 +331,7 @@ fn find(
     }
     
     // Clone necessary data for the thread
-    let glob_set = Arc::new(glob_set);
+    let pattern_matcher = Arc::new(pattern_matcher);
     let exclude_set = Arc::new(exclude_set);
     let regex_matcher = Arc::new(regex_matcher);
     let extension = Arc::new(extension);
@@ -309,7 +349,7 @@ fn find(
         let walker = builder.build_parallel();
         walker.run(|| {
             let tx = tx.clone();
-            let glob_set = Arc::clone(&glob_set);
+            let pattern_matcher = Arc::clone(&pattern_matcher);
             let exclude_set = Arc::clone(&exclude_set);
             let regex_matcher = Arc::clone(&regex_matcher);
             let extension = Arc::clone(&extension);
@@ -327,7 +367,7 @@ fn find(
                     Ok(entry) => {
                         if should_include_entry(
                             &entry,
-                            &glob_set,
+                            &pattern_matcher,
                             &exclude_set,
                             &regex_matcher,
                             file_type_filter,
@@ -353,7 +393,7 @@ fn find(
         });
     });
     
-    if yield_results {
+    if actual_yield_results {
         // Return iterator for streaming
         Ok(Py::new(py, VexyGlobIterator {
             receiver: Some(rx),
@@ -369,6 +409,27 @@ fn find(
         while let Ok(result) = rx.recv() {
             if let FindResult::Path(path) = result {
                 results.push(path);
+            }
+        }
+        
+        // Sort results if requested
+        if let Some(ref sort_by) = sort {
+            match sort_by.as_str() {
+                "name" => results.sort_by(|a, b| a.file_name().cmp(&b.file_name())),
+                "path" => results.sort(),
+                "size" => {
+                    results.sort_by_key(|p| {
+                        std::fs::metadata(p).ok().map(|m| m.len()).unwrap_or(0)
+                    });
+                }
+                "mtime" => {
+                    results.sort_by_key(|p| {
+                        std::fs::metadata(p).ok()
+                            .and_then(|m| m.modified().ok())
+                            .unwrap_or(SystemTime::UNIX_EPOCH)
+                    });
+                }
+                _ => return Err(PyValueError::new_err(format!("Invalid sort option: {}. Use 'name', 'path', 'size', or 'mtime'", sort_by))),
             }
         }
         
@@ -414,6 +475,7 @@ fn find(
     no_global_ignore = false,
     custom_ignore_files = None,
     follow_symlinks = false,
+    same_file_system = false,
     case_sensitive_glob = true,
     _case_sensitive_content = true,
     as_path_objects = false,
@@ -444,6 +506,7 @@ fn search(
     no_global_ignore: bool,
     custom_ignore_files: Option<Vec<String>>,
     follow_symlinks: bool,
+    same_file_system: bool,
     case_sensitive_glob: bool,
     _case_sensitive_content: bool,
     as_path_objects: bool,
@@ -451,13 +514,15 @@ fn search(
     _multiline: bool,
     threads: usize,
 ) -> PyResult<PyObject> {
-    // Build content pattern matcher
-    let content_matcher = RegexMatcher::new_line_matcher(&content_regex)
+    // Build content pattern matcher with case sensitivity
+    let content_matcher = RegexMatcherBuilder::new()
+        .case_insensitive(!_case_sensitive_content)
+        .build(&content_regex)
         .map_err(|e| PyValueError::new_err(format!("Invalid content regex: {}", e)))?;
     
-    // Build glob pattern matcher
-    let glob_set = if let Some(pattern) = glob {
-        Some(build_glob_set(&[pattern], case_sensitive_glob)
+    // Build glob pattern matcher with literal optimization
+    let pattern_matcher = if let Some(pattern) = glob {
+        Some(PatternMatcher::new(&pattern, case_sensitive_glob)
             .map_err(|e| PyValueError::new_err(format!("Invalid glob pattern: {}", e)))?)
     } else {
         None
@@ -491,8 +556,11 @@ fn search(
         _ => None,
     });
     
-    // Create channel for results
-    let (tx, rx) = bounded::<FindResult>(1000);
+    // Get optimal buffer configuration for content search
+    let buffer_config = BufferConfig::for_workload(true, false, threads);
+    
+    // Create channel for results with optimal capacity
+    let (tx, rx) = bounded::<FindResult>(buffer_config.channel_capacity);
     
     // Build the walker
     let mut builder = WalkBuilder::new(&paths[0]);
@@ -510,6 +578,7 @@ fn search(
         .git_global(!no_global_ignore)  // respect global gitignore
         .git_exclude(!no_ignore)  // respect .git/info/exclude
         .follow_links(follow_symlinks)  // follow symbolic links
+        .same_file_system(same_file_system)  // don't cross filesystem boundaries
         .max_depth(max_depth)
         .threads(if threads == 0 { num_cpus::get() } else { threads });
     
@@ -533,7 +602,7 @@ fn search(
     }
     
     // Clone necessary data for the thread
-    let glob_set = Arc::new(glob_set);
+    let pattern_matcher = Arc::new(pattern_matcher);
     let exclude_set = Arc::new(exclude_set);
     let regex_matcher = Arc::new(regex_matcher);
     let extension = Arc::new(extension);
@@ -552,7 +621,7 @@ fn search(
         let walker = builder.build_parallel();
         walker.run(|| {
             let tx = tx.clone();
-            let glob_set = Arc::clone(&glob_set);
+            let pattern_matcher = Arc::clone(&pattern_matcher);
             let exclude_set = Arc::clone(&exclude_set);
             let regex_matcher = Arc::clone(&regex_matcher);
             let extension = Arc::clone(&extension);
@@ -572,7 +641,7 @@ fn search(
                         // First check if path matches our filters
                         if should_include_entry(
                             &entry,
-                            &glob_set,
+                            &pattern_matcher,
                             &exclude_set,
                             &regex_matcher,
                             file_type_filter,
@@ -658,12 +727,91 @@ enum FileType {
     Symlink,
 }
 
+/// Pattern matcher that optimizes for literal patterns
+#[derive(Debug)]
+enum PatternMatcher {
+    /// Literal pattern - direct string comparison
+    Literal { pattern: String, case_sensitive: bool },
+    /// Glob pattern - uses GlobSet
+    Glob(GlobSet),
+}
+
+impl PatternMatcher {
+    /// Create a new pattern matcher, optimizing for literal patterns
+    fn new(pattern: &str, case_sensitive: bool) -> Result<Self> {
+        if is_literal_pattern(pattern) {
+            Ok(PatternMatcher::Literal { 
+                pattern: pattern.to_string(), 
+                case_sensitive 
+            })
+        } else {
+            // Build glob pattern
+            // If pattern doesn't contain path separator, prepend **/ to match in any directory
+            let adjusted_pattern = if !pattern.contains('/') && !pattern.contains('\\') {
+                format!("**/{}", pattern)
+            } else {
+                pattern.to_string()
+            };
+            
+            let glob = globset::GlobBuilder::new(&adjusted_pattern)
+                .case_insensitive(!case_sensitive)
+                .build()?;
+            let mut builder = GlobSetBuilder::new();
+            builder.add(glob);
+            Ok(PatternMatcher::Glob(builder.build()?))
+        }
+    }
+    
+    /// Check if a path matches the pattern
+    fn is_match(&self, path: &Path) -> bool {
+        match self {
+            PatternMatcher::Literal { pattern, case_sensitive } => {
+                // For literal patterns, we need to check if the pattern contains a path separator
+                // If it does, match against the full path; otherwise match against the filename
+                if pattern.contains('/') || pattern.contains('\\') {
+                    let path_str = path.to_string_lossy();
+                    if *case_sensitive {
+                        path_str.ends_with(pattern)
+                    } else {
+                        path_str.to_lowercase().ends_with(&pattern.to_lowercase())
+                    }
+                } else {
+                    // Match against filename only
+                    if let Some(filename) = path.file_name() {
+                        let filename_str = filename.to_string_lossy();
+                        if *case_sensitive {
+                            filename_str.as_ref() == pattern
+                        } else {
+                            filename_str.to_lowercase() == pattern.to_lowercase()
+                        }
+                    } else {
+                        false
+                    }
+                }
+            }
+            PatternMatcher::Glob(glob_set) => glob_set.is_match(path),
+        }
+    }
+}
+
+/// Check if a pattern contains glob special characters
+fn is_literal_pattern(pattern: &str) -> bool {
+    !pattern.chars().any(|c| matches!(c, '*' | '?' | '[' | ']' | '{' | '}'))
+}
+
 /// Build a GlobSet from patterns
 fn build_glob_set(patterns: &[String], case_sensitive: bool) -> Result<GlobSet> {
     let mut builder = GlobSetBuilder::new();
     
     for pattern in patterns {
-        let glob = globset::GlobBuilder::new(pattern)
+        // If pattern doesn't contain path separator, prepend **/ to match in any directory
+        let adjusted_pattern = if !pattern.contains('/') && !pattern.contains('\\') {
+            format!("**/{}", pattern)
+        } else {
+            pattern.clone()
+        };
+        
+        let glob = globset::GlobBuilder::new(&adjusted_pattern)
             .case_insensitive(!case_sensitive)
             .build()?;
         builder.add(glob);
@@ -675,7 +823,7 @@ fn build_glob_set(patterns: &[String], case_sensitive: bool) -> Result<GlobSet> 
 /// Check if a directory entry should be included based on filters
 fn should_include_entry(
     entry: &DirEntry,
-    glob_set: &Option<GlobSet>,
+    pattern_matcher: &Option<PatternMatcher>,
     exclude_set: &Option<GlobSet>,
     regex_matcher: &Option<regex::Regex>,
     file_type_filter: Option<FileType>,
@@ -692,8 +840,8 @@ fn should_include_entry(
     let path = entry.path();
     
     // Check glob pattern
-    if let Some(ref globs) = glob_set {
-        if !globs.is_match(path) {
+    if let Some(ref matcher) = pattern_matcher {
+        if !matcher.is_match(path) {
             return false;
         }
     }
@@ -856,7 +1004,7 @@ fn search_file_content(
         }
     };
     
-    // Create searcher
+    // Create searcher (buffer size optimization deferred - API doesn't support it directly)
     let mut searcher = Searcher::new();
     
     // Create sink for collecting results

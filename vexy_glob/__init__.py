@@ -130,6 +130,39 @@ def _parse_time_param(value: Union[float, int, str, datetime, None]) -> Optional
     raise TypeError(f"Unsupported time type: {type(value)}")
 
 
+import functools
+
+@functools.lru_cache(maxsize=128)
+def _has_uppercase(pattern: str) -> bool:
+    """Check if a pattern contains any uppercase letters. Cached for performance."""
+    return any(c.isupper() for c in pattern)
+
+# Cache for common pattern case sensitivity to avoid repeated computation
+_COMMON_PATTERN_CASE_CACHE = {
+    "*": False,
+    "*.py": False,
+    "*.txt": False,
+    "*.js": False,
+    "*.md": False,
+    "*.json": False,
+    "*.yml": False,
+    "*.yaml": False,
+    "**/*.py": False,
+    "**/*.txt": False,
+    "**/*.js": False,
+    "README.md": False,
+}
+
+def _is_case_sensitive_pattern(pattern: str) -> bool:
+    """Fast path for determining pattern case sensitivity."""
+    # Check cache first for common patterns
+    if pattern in _COMMON_PATTERN_CASE_CACHE:
+        return _COMMON_PATTERN_CASE_CACHE[pattern]
+    
+    # Fall back to cached function for other patterns
+    return _has_uppercase(pattern)
+
+
 def find(
     pattern: str = "*",
     root: Union[str, Path] = ".",
@@ -153,6 +186,8 @@ def find(
     custom_ignore_files: Optional[Union[str, List[str]]] = None,
     case_sensitive: Optional[bool] = None,  # None = smart case
     follow_symlinks: bool = False,
+    same_file_system: bool = False,
+    sort: Optional[Literal["name", "path", "size", "mtime"]] = None,
     threads: Optional[int] = None,
     as_path: bool = False,
     as_list: bool = False,
@@ -196,6 +231,8 @@ def find(
                             detected and processed when ignore_git=False.
         case_sensitive: Case sensitivity for patterns (None = smart case)
         follow_symlinks: Follow symbolic links (default: False)
+        same_file_system: Don't cross filesystem boundaries (default: False)
+        sort: Sort results by 'name', 'path', 'size', or 'mtime' (forces collection)
         threads: Number of parallel threads (None = auto-detect)
         as_path: Return pathlib.Path objects instead of strings
         as_list: Return a list instead of an iterator
@@ -215,17 +252,27 @@ def find(
     # Convert root to string if Path
     if isinstance(root, Path):
         root = str(root)
+    
+    # Implement smart-case matching with fast path optimization
+    if case_sensitive is None:
+        # Smart case: case-sensitive if pattern contains uppercase
+        effective_glob_case_sensitive = _is_case_sensitive_pattern(pattern)
+        effective_content_case_sensitive = _has_uppercase(content) if content else True
+    else:
+        # Explicit case sensitivity applies to both
+        effective_glob_case_sensitive = case_sensitive
+        effective_content_case_sensitive = case_sensitive
 
-    # Convert extension to list if string
-    if isinstance(extension, str):
+    # Convert extension to list if string (optimized with early return)
+    if extension is not None and isinstance(extension, str):
         extension = [extension]
 
-    # Convert exclude to list if string
-    if isinstance(exclude, str):
+    # Convert exclude to list if string (optimized with early return)
+    if exclude is not None and isinstance(exclude, str):
         exclude = [exclude]
 
-    # Convert custom_ignore_files to list if string
-    if isinstance(custom_ignore_files, str):
+    # Convert custom_ignore_files to list if string (optimized with early return)
+    if custom_ignore_files is not None and isinstance(custom_ignore_files, str):
         custom_ignore_files = [custom_ignore_files]
 
     # Parse time parameters to Unix timestamps
@@ -263,8 +310,9 @@ def find(
                 no_ignore=ignore_git,
                 custom_ignore_files=custom_ignore_files,
                 follow_symlinks=follow_symlinks,
-                case_sensitive_glob=case_sensitive is not False,
-                _case_sensitive_content=case_sensitive is not False,
+                same_file_system=same_file_system,
+                case_sensitive_glob=effective_glob_case_sensitive,
+                _case_sensitive_content=effective_content_case_sensitive,
                 as_path_objects=as_path,
                 yield_results=not as_list,
                 _multiline=False,
@@ -291,9 +339,11 @@ def find(
                 no_ignore=ignore_git,
                 custom_ignore_files=custom_ignore_files,
                 follow_symlinks=follow_symlinks,
-                case_sensitive_glob=case_sensitive is not False,
+                same_file_system=same_file_system,
+                case_sensitive_glob=effective_glob_case_sensitive,
                 as_path_objects=as_path,
-                yield_results=not as_list,
+                yield_results=not as_list and sort is None,
+                sort=sort,
                 threads=threads or 0,
             )
     except Exception as e:
@@ -395,4 +445,6 @@ def search(
     Returns:
         Iterator or list of SearchResult dictionaries
     """
+    # Remove sort parameter as content search doesn't support sorting
+    kwargs.pop('sort', None)
     return find(pattern=pattern, root=root, content=content_regex, **kwargs)

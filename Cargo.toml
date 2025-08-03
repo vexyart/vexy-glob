@@ -35,3 +35,11 @@ lto = true
 panic = "abort"
 codegen-units = 1
 
+[dev-dependencies]
+criterion = "0.5"
+tempfile = "3.8"
+
+[[bench]]
+name = "hot_paths"
+harness = false
+

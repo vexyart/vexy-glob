@@ -7,6 +7,10 @@ Project Structure:
 │   │   ├── 📄 dependencies.yml
 │   │   └── 📄 release.yml
 │   └── 📄 dependabot.yml
+├── 📁 benches
+│   └── 📄 hot_paths.rs
+├── 📁 cargo-flamegraph.trace
+│   └── 📁 Trace1.run
 ├── 📁 examples
 │   ├── 📄 compare_stdlib.py
 │   ├── 📄 demo.py
@@ -16,129 +20,346 @@ Project Structure:
 ├── 📁 src
 │   └── 📄 lib.rs
 ├── 📁 target
+│   ├── 📁 criterion
+│   │   ├── 📁 content_search
+│   │   │   └── 📁 grep_search
+│   │   │       └── 📁 
+│   │   │           800_py_file
+│   │   │           s
+│   │   │           └── ... 
+│   │   │               (depth 
+│   │   │               limit 
+│   │   │               reached
+│   │   │               )
+│   │   ├── 📁 
+│   │   │   directory_traversal
+│   │   │   ├── 📁 2k_files
+│   │   │   │   └── 📁 report
+│   │   │   │       └── ... 
+│   │   │   │           (depth 
+│   │   │   │           limit 
+│   │   │   │           reached
+│   │   │   │           )
+│   │   │   ├── 📁 basic_walk
+│   │   │   │   └── 📁 2k_files
+│   │   │   │       └── ... 
+│   │   │   │           (depth 
+│   │   │   │           limit 
+│   │   │   │           reached
+│   │   │   │           )
+│   │   │   ├── 📁 
+│   │   │   │   gitignore_walk
+│   │   │   │   └── 📁 2k_files
+│   │   │   │       └── ... 
+│   │   │   │           (depth 
+│   │   │   │           limit 
+│   │   │   │           reached
+│   │   │   │           )
+│   │   │   ├── 📁 
+│   │   │   │   parallel_walk
+│   │   │   │   └── 📁 2k_files
+│   │   │   │       └── ... 
+│   │   │   │           (depth 
+│   │   │   │           limit 
+│   │   │   │           reached
+│   │   │   │           )
+│   │   │   └── 📁 report
+│   │   ├── 📁 file_metadata
+│   │   │   ├── 📁 500_files
+│   │   │   │   └── 📁 report
+│   │   │   │       └── ... 
+│   │   │   │           (depth 
+│   │   │   │           limit 
+│   │   │   │           reached
+│   │   │   │           )
+│   │   │   ├── 📁 
+│   │   │   │   file_type_check
+│   │   │   │   └── 📁 
+│   │   │   │       500_files
+│   │   │   │       └── ... 
+│   │   │   │           (depth 
+│   │   │   │           limit 
+│   │   │   │           reached
+│   │   │   │           )
+│   │   │   ├── 📁 
+│   │   │   │   path_to_string
+│   │   │   │   └── 📁 
+│   │   │   │       500_files
+│   │   │   │       └── ... 
+│   │   │   │           (depth 
+│   │   │   │           limit 
+│   │   │   │           reached
+│   │   │   │           )
+│   │   │   └── 📁 report
+│   │   ├── 📁 pattern_matching
+│   │   │   ├── 📁 1k_paths
+│   │   │   │   └── 📁 report
+│   │   │   │       └── ... 
+│   │   │   │           (depth 
+│   │   │   │           limit 
+│   │   │   │           reached
+│   │   │   │           )
+│   │   │   ├── 📁 complex_glob
+│   │   │   │   └── 📁 1k_paths
+│   │   │   │       └── ... 
+│   │   │   │           (depth 
+│   │   │   │           limit 
+│   │   │   │           reached
+│   │   │   │           )
+│   │   │   ├── 📁 glob_match
+│   │   │   │   └── 📁 1k_paths
+│   │   │   │       └── ... 
+│   │   │   │           (depth 
+│   │   │   │           limit 
+│   │   │   │           reached
+│   │   │   │           )
+│   │   │   ├── 📁 
+│   │   │   │   literal_match
+│   │   │   │   └── 📁 1k_paths
+│   │   │   │       └── ... 
+│   │   │   │           (depth 
+│   │   │   │           limit 
+│   │   │   │           reached
+│   │   │   │           )
+│   │   │   ├── 📁 regex_match
+│   │   │   │   └── 📁 1k_paths
+│   │   │   │       └── ... 
+│   │   │   │           (depth 
+│   │   │   │           limit 
+│   │   │   │           reached
+│   │   │   │           )
+│   │   │   └── 📁 report
+│   │   └── 📁 report
 │   ├── 📁 debug
 │   │   ├── 📁 deps
 │   │   ├── 📁 examples
 │   │   └── 📁 incremental
 │   │       ├── 📁 
-│   │       │   pafr-2qy9vx5prgo3z
+│   │       │   hot_paths-15evu
+│   │       │   rhoya2w2
 │   │       │   └── 📁 
-│   │       │       s-h9stjuu82p-0wy
-│   │       │       1o7w-6ijd8nvk3sp
-│   │       │       h9ai7vwo87nzf6
-│   │       │       └── ... (depth 
+│   │       │       s-h9u0mefj5
+│   │       │       f-016bow8-w
+│   │       │       orking
+│   │       │       └── ... 
+│   │       │           (depth 
 │   │       │           limit 
-│   │       │           reached)
+│   │       │           reached
+│   │       │           )
 │   │       ├── 📁 
-│   │       │   pafr-3k3ufq6npu65c
+│   │       │   pafr-2qy9vx5prg
+│   │       │   o3z
 │   │       │   └── 📁 
-│   │       │       s-h9stjuu8dr-0wp
-│   │       │       vucw-b6m44sjb4uo
-│   │       │       pzavvg500bh1d3
-│   │       │       └── ... (depth 
+│   │       │       s-h9stjuu82
+│   │       │       p-0wy1o7w-6
+│   │       │       ijd8nvk3sph
+│   │       │       9ai7vwo87nz
+│   │       │       f6
+│   │       │       └── ... 
+│   │       │           (depth 
 │   │       │           limit 
-│   │       │           reached)
+│   │       │           reached
+│   │       │           )
 │   │       ├── 📁 
-│   │       │   pafr-3vcerdictosdl
+│   │       │   pafr-3k3ufq6npu
+│   │       │   65c
 │   │       │   └── 📁 
-│   │       │       s-h9sygw5sed-0j2
-│   │       │       7mtq-cl9j1pe6i51
-│   │       │       6756ts3550wrdg
-│   │       │       └── ... (depth 
+│   │       │       s-h9stjuu8d
+│   │       │       r-0wpvucw-b
+│   │       │       6m44sjb4uop
+│   │       │       zavvg500bh1
+│   │       │       d3
+│   │       │       └── ... 
+│   │       │           (depth 
 │   │       │           limit 
-│   │       │           reached)
+│   │       │           reached
+│   │       │           )
 │   │       ├── 📁 
-│   │       │   vexy_glob-0214p87xb2
-│   │       │   a1g
+│   │       │   pafr-3vcerdicto
+│   │       │   sdl
 │   │       │   └── 📁 
-│   │       │       s-h9t098e2d4-1do
-│   │       │       12nc-9vx2udpm8k8
-│   │       │       3erlvfr0w5zspn
-│   │       │       └── ... (depth 
+│   │       │       s-h9sygw5se
+│   │       │       d-0j27mtq-c
+│   │       │       l9j1pe6i516
+│   │       │       756ts3550wr
+│   │       │       dg
+│   │       │       └── ... 
+│   │       │           (depth 
 │   │       │           limit 
-│   │       │           reached)
+│   │       │           reached
+│   │       │           )
 │   │       ├── 📁 
-│   │       │   vexy_glob-0dko6auggy
-│   │       │   fat
+│   │       │   vexy_glob-0214p
+│   │       │   87xb2a1g
+│   │       │   └── 📁 
+│   │       │       s-h9t098e2d
+│   │       │       4-1do12nc-9
+│   │       │       vx2udpm8k83
+│   │       │       erlvfr0w5zs
+│   │       │       pn
+│   │       │       └── ... 
+│   │       │           (depth 
+│   │       │           limit 
+│   │       │           reached
+│   │       │           )
+│   │       ├── 📁 
+│   │       │   vexy_glob-0dko6
+│   │       │   auggyfat
 │   │       │   ├── 📁 
-│   │       │   │   s-h9sz18qkca-05q
-│   │       │   │   smuc-working
-│   │       │   │   └── ... (depth 
+│   │       │   │   s-h9sz18qkc
+│   │       │   │   a-05qsmuc-w
+│   │       │   │   orking
+│   │       │   │   └── ... 
+│   │       │   │       (depth 
 │   │       │   │       limit 
-│   │       │   │       reached)
+│   │       │   │       reached
+│   │       │   │       )
 │   │       │   └── 📁 
-│   │       │       s-h9sz19pa87-13i
-│   │       │       nbo1-8kmg2pfathp
-│   │       │       ezlpa0gn5t8ukd
-│   │       │       └── ... (depth 
+│   │       │       s-h9sz19pa8
+│   │       │       7-13inbo1-8
+│   │       │       kmg2pfathpe
+│   │       │       zlpa0gn5t8u
+│   │       │       kd
+│   │       │       └── ... 
+│   │       │           (depth 
 │   │       │           limit 
-│   │       │           reached)
+│   │       │           reached
+│   │       │           )
 │   │       ├── 📁 
-│   │       │   vexy_glob-0o0uuwmbfk
-│   │       │   i5z
+│   │       │   vexy_glob-0lsf8
+│   │       │   ozqou5y3
 │   │       │   └── 📁 
-│   │       │       s-h9t098e2dd-0xi
-│   │       │       4928-c4pk1st2nb0
-│   │       │       tgj2nuhcp109mq
-│   │       │       └── ... (depth 
+│   │       │       s-h9u0ly96n
+│   │       │       m-1vfjosc-3
+│   │       │       lvxkuo4pux1
+│   │       │       mgcxg0zzkuy
+│   │       │       fn
+│   │       │       └── ... 
+│   │       │           (depth 
 │   │       │           limit 
-│   │       │           reached)
+│   │       │           reached
+│   │       │           )
 │   │       ├── 📁 
-│   │       │   vexy_glob-173gufp31m
-│   │       │   ci0
+│   │       │   vexy_glob-0o0uu
+│   │       │   wmbfki5z
 │   │       │   └── 📁 
-│   │       │       s-h9t0p0yleo-0sq
-│   │       │       12de-4z1cvvatooo
-│   │       │       rg6qwg9oe91tx4
-│   │       │       └── ... (depth 
+│   │       │       s-h9t098e2d
+│   │       │       d-0xi4928-c
+│   │       │       4pk1st2nb0t
+│   │       │       gj2nuhcp109
+│   │       │       mq
+│   │       │       └── ... 
+│   │       │           (depth 
 │   │       │           limit 
-│   │       │           reached)
+│   │       │           reached
+│   │       │           )
 │   │       ├── 📁 
-│   │       │   vexy_glob-1lw82dsdfc
-│   │       │   39b
+│   │       │   vexy_glob-173gu
+│   │       │   fp31mci0
+│   │       │   └── 📁 
+│   │       │       s-h9u0321sd
+│   │       │       c-0doz7bi-5
+│   │       │       fq99idvi4la
+│   │       │       s21hdgv9cgv
+│   │       │       o2
+│   │       │       └── ... 
+│   │       │           (depth 
+│   │       │           limit 
+│   │       │           reached
+│   │       │           )
+│   │       ├── 📁 
+│   │       │   vexy_glob-1apd4
+│   │       │   3hmi7wy3
+│   │       │   └── 📁 
+│   │       │       s-h9u0mefyh
+│   │       │       3-15swbgn-5
+│   │       │       y4ie7shixm8
+│   │       │       dtyc0uzhgjr
+│   │       │       qe
+│   │       │       └── ... 
+│   │       │           (depth 
+│   │       │           limit 
+│   │       │           reached
+│   │       │           )
+│   │       ├── 📁 
+│   │       │   vexy_glob-1lw82
+│   │       │   dsdfc39b
 │   │       │   ├── 📁 
-│   │       │   │   s-h9sz18qj2k-026
-│   │       │   │   m52i-working
-│   │       │   │   └── ... (depth 
+│   │       │   │   s-h9sz18qj2
+│   │       │   │   k-026m52i-w
+│   │       │   │   orking
+│   │       │   │   └── ... 
+│   │       │   │       (depth 
 │   │       │   │       limit 
-│   │       │   │       reached)
+│   │       │   │       reached
+│   │       │   │       )
 │   │       │   └── 📁 
-│   │       │       s-h9sz19p74t-1td
-│   │       │       0d1a-dfmc8tluie8
-│   │       │       hdh1b468t9irkz
-│   │       │       └── ... (depth 
+│   │       │       s-h9sz19p74
+│   │       │       t-1td0d1a-d
+│   │       │       fmc8tluie8h
+│   │       │       dh1b468t9ir
+│   │       │       kz
+│   │       │       └── ... 
+│   │       │           (depth 
 │   │       │           limit 
-│   │       │           reached)
+│   │       │           reached
+│   │       │           )
 │   │       ├── 📁 
-│   │       │   vexy_glob-1xffhew2ot
-│   │       │   q30
+│   │       │   vexy_glob-1xffh
+│   │       │   ew2otq30
 │   │       │   └── 📁 
-│   │       │       s-h9t05ab46q-02r
-│   │       │       swlq-1xx6sifycg0
-│   │       │       wcmewh2c946qm9
-│   │       │       └── ... (depth 
+│   │       │       s-h9t05ab46
+│   │       │       q-02rswlq-1
+│   │       │       xx6sifycg0w
+│   │       │       cmewh2c946q
+│   │       │       m9
+│   │       │       └── ... 
+│   │       │           (depth 
 │   │       │           limit 
-│   │       │           reached)
+│   │       │           reached
+│   │       │           )
 │   │       ├── 📁 
-│   │       │   vexy_glob-2dx3kma3n1
-│   │       │   6so
+│   │       │   vexy_glob-2dx3k
+│   │       │   ma3n16so
 │   │       │   └── 📁 
-│   │       │       s-h9t05ab42z-1ko
-│   │       │       1dkt-awuy4juducp
-│   │       │       5flkxa6as3c4st
-│   │       │       └── ... (depth 
+│   │       │       s-h9t05ab42
+│   │       │       z-1ko1dkt-a
+│   │       │       wuy4juducp5
+│   │       │       flkxa6as3c4
+│   │       │       st
+│   │       │       └── ... 
+│   │       │           (depth 
 │   │       │           limit 
-│   │       │           reached)
+│   │       │           reached
+│   │       │           )
+│   │       ├── 📁 
+│   │       │   vexy_glob-2iibn
+│   │       │   jz9ek8q6
+│   │       │   └── 📁 
+│   │       │       s-h9u032287
+│   │       │       4-1bmmgqi-3
+│   │       │       fo2km8d9dkc
+│   │       │       1xa9yt9gcxe
+│   │       │       ee
+│   │       │       └── ... 
+│   │       │           (depth 
+│   │       │           limit 
+│   │       │           reached
+│   │       │           )
 │   │       └── 📁 
-│   │           vexy_glob-2iibnjz9ek
-│   │           8q6
+│   │           vexy_glob-2tvax
+│   │           o47qknxl
 │   │           └── 📁 
-│   │               s-h9t0p0ylbm-0di
-│   │               hf1p-bf8prejuohl
-│   │               aszabpf65pg9vb
-│   │               └── ... (depth 
+│   │               s-h9u01xdng
+│   │               5-1350jui-1
+│   │               2p9ejxa39d2
+│   │               5yrh5es476t
+│   │               dc
+│   │               └── ... 
+│   │                   (depth 
 │   │                   limit 
-│   │                   reached)
+│   │                   reached
+│   │                   )
 │   ├── 📁 doc
 │   │   ├── 📁 pafr
 │   │   ├── 📁 search.desc
@@ -149,40 +370,67 @@ Project Structure:
 │   │   └── 📁 trait.impl
 │   │       └── 📁 core
 │   │           ├── 📁 clone
-│   │           │   └── ... (depth 
+│   │           │   └── ... 
+│   │           │       (depth 
 │   │           │       limit 
-│   │           │       reached)
+│   │           │       reached
+│   │           │       )
 │   │           ├── 📁 fmt
-│   │           │   └── ... (depth 
+│   │           │   └── ... 
+│   │           │       (depth 
 │   │           │       limit 
-│   │           │       reached)
+│   │           │       reached
+│   │           │       )
 │   │           ├── 📁 marker
-│   │           │   └── ... (depth 
+│   │           │   └── ... 
+│   │           │       (depth 
 │   │           │       limit 
-│   │           │       reached)
+│   │           │       reached
+│   │           │       )
 │   │           └── 📁 panic
-│   │               └── ... (depth 
+│   │               └── ... 
+│   │                   (depth 
 │   │                   limit 
-│   │                   reached)
+│   │                   reached
+│   │                   )
 │   ├── 📁 maturin
 │   ├── 📁 release
 │   │   ├── 📁 deps
 │   │   ├── 📁 examples
 │   │   └── 📁 incremental
+│   ├── 📁 tmp
 │   └── 📁 wheels
 ├── 📁 test_gitignore
 │   ├── 📁 test_gitignore
 │   └── 📄 .gitignore
 ├── 📁 tests
-│   ├── 📄 test_atime_filtering.py
+│   ├── 📄 
+│   │   test_atime_filtering.py
 │   ├── 📄 test_basic.py
+│   ├── 📄 
+│   │   test_buffer_optimizatio
+│   │   n.py
 │   ├── 📄 test_cli.py
-│   ├── 📄 test_ctime_filtering.py
-│   ├── 📄 test_custom_ignore.py
-│   ├── 📄 test_exclude_patterns.py
-│   ├── 📄 test_size_filtering.py
+│   ├── 📄 
+│   │   test_ctime_filtering.py
+│   ├── 📄 
+│   │   test_custom_ignore.py
+│   ├── 📄 
+│   │   test_exclude_patterns.p
+│   │   y
+│   ├── 📄 
+│   │   test_literal_optimizati
+│   │   on.py
+│   ├── 📄 
+│   │   test_same_file_system.p
+│   │   y
+│   ├── 📄 
+│   │   test_size_filtering.py
+│   ├── 📄 test_smart_case.py
+│   ├── 📄 test_sorting.py
 │   ├── 📄 test_symlinks.py
-│   ├── 📄 test_time_filtering.py
+│   ├── 📄 
+│   │   test_time_filtering.py
 │   └── 📄 test_time_formats.py
 ├── 📁 vexy_glob
 │   ├── 📄 __init__.py
@@ -197,6 +445,7 @@ Project Structure:
 ├── 📄 GEMINI.md
 ├── 📄 LICENSE
 ├── 📄 PLAN.md
+├── 📄 profile_performance.py
 ├── 📄 publish.sh
 ├── 📄 pyproject.toml
 ├── 📄 README.md
@@ -552,6 +801,30 @@ When I say "/plan [requirement]", you must:
 - You may use these commands autonomously when appropriate
 
 
+**TLDR for vexy_glob Codebase**
+
+`vexy_glob` is a high-performance Python library, with its core implemented in Rust, designed to be a significantly faster and more feature-rich alternative to Python's built-in `glob` and `pathlib` modules for file system traversal and content searching.
+
+**Core Functionality & Architecture:**
+
+*   **Hybrid Python/Rust Architecture:** It combines a user-friendly Python API (`vexy_glob/__init__.py`) with a high-performance Rust backend (`src/lib.rs`). Communication between the two is handled by `PyO3`.
+*   **High-Performance File Finding:** The Rust core uses the `ignore` crate for extremely fast, parallel, and gitignore-aware directory traversal. It employs a producer-consumer model with `crossbeam-channel` to stream results back to Python, ensuring low, constant memory usage and providing the first results almost instantly.
+*   **Advanced Content Searching:** It integrates the power of `ripgrep`'s `grep-searcher` crate to perform fast, regex-based content searches within files, similar to modern tools like `rg`.
+*   **Rich Filtering Capabilities:** Beyond simple glob patterns (handled by the `globset` crate), it supports a wide array of filters including file size, modification/access/creation times (with human-readable formats), file types, and custom exclude patterns.
+*   **Build & Versioning System:** The project has been modernized to use `maturin` as its build backend, which is ideal for Rust-based Python extensions. Versioning is managed via git tags using `setuptools-scm`, with a `sync_version.py` script to keep `Cargo.toml` and `pyproject.toml` in sync.
+
+**Development, Testing, and CI/CD:**
+
+*   **Robust CI/CD Pipeline:** The project uses GitHub Actions for a comprehensive CI/CD setup. This includes:
+    *   **Testing:** Running tests on Linux, macOS, and Windows across a matrix of Python versions (3.8-3.12). Both Python (`pytest`) and Rust (`cargo test`) test suites are executed.
+    *   **Code Quality:** Enforcing code quality with `ruff` for Python and `cargo clippy`/`cargo fmt` for Rust.
+    *   **Builds & Releases:** Automatically building cross-platform wheels and source distributions using `cibuildwheel` and `maturin`.
+    *   **Publishing:** Automating releases to PyPI when a new version tag is pushed.
+    *   **Code Coverage:** Tracking test coverage for both Rust and Python code using `Codecov`.
+*   **Dependency Management:** `Dependabot` is configured to keep both Rust (`cargo`) and GitHub Actions dependencies up-to-date.
+*   **Comprehensive Documentation:** The project maintains detailed documentation for developers and users, including a `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, and specific instructions for AI agents (`CLAUDE.md`, `GEMINI.md`).
+
+**Key Takeaway:** `vexy_glob` is a well-engineered, robust, and heavily-tested library that solves the common problem of slow file system operations in Python by leveraging Rust's performance. Its architecture is designed for speed, efficiency, and scalability, and it is supported by a modern and automated development infrastructure.
 
 </document_content>
 </document>
@@ -1357,6 +1630,30 @@ When I say "/plan [requirement]", you must:
 - You may use these commands autonomously when appropriate
 
 
+**TLDR for vexy_glob Codebase**
+
+`vexy_glob` is a high-performance Python library, with its core implemented in Rust, designed to be a significantly faster and more feature-rich alternative to Python's built-in `glob` and `pathlib` modules for file system traversal and content searching.
+
+**Core Functionality & Architecture:**
+
+*   **Hybrid Python/Rust Architecture:** It combines a user-friendly Python API (`vexy_glob/__init__.py`) with a high-performance Rust backend (`src/lib.rs`). Communication between the two is handled by `PyO3`.
+*   **High-Performance File Finding:** The Rust core uses the `ignore` crate for extremely fast, parallel, and gitignore-aware directory traversal. It employs a producer-consumer model with `crossbeam-channel` to stream results back to Python, ensuring low, constant memory usage and providing the first results almost instantly.
+*   **Advanced Content Searching:** It integrates the power of `ripgrep`'s `grep-searcher` crate to perform fast, regex-based content searches within files, similar to modern tools like `rg`.
+*   **Rich Filtering Capabilities:** Beyond simple glob patterns (handled by the `globset` crate), it supports a wide array of filters including file size, modification/access/creation times (with human-readable formats), file types, and custom exclude patterns.
+*   **Build & Versioning System:** The project has been modernized to use `maturin` as its build backend, which is ideal for Rust-based Python extensions. Versioning is managed via git tags using `setuptools-scm`, with a `sync_version.py` script to keep `Cargo.toml` and `pyproject.toml` in sync.
+
+**Development, Testing, and CI/CD:**
+
+*   **Robust CI/CD Pipeline:** The project uses GitHub Actions for a comprehensive CI/CD setup. This includes:
+    *   **Testing:** Running tests on Linux, macOS, and Windows across a matrix of Python versions (3.8-3.12). Both Python (`pytest`) and Rust (`cargo test`) test suites are executed.
+    *   **Code Quality:** Enforcing code quality with `ruff` for Python and `cargo clippy`/`cargo fmt` for Rust.
+    *   **Builds & Releases:** Automatically building cross-platform wheels and source distributions using `cibuildwheel` and `maturin`.
+    *   **Publishing:** Automating releases to PyPI when a new version tag is pushed.
+    *   **Code Coverage:** Tracking test coverage for both Rust and Python code using `Codecov`.
+*   **Dependency Management:** `Dependabot` is configured to keep both Rust (`cargo`) and GitHub Actions dependencies up-to-date.
+*   **Comprehensive Documentation:** The project maintains detailed documentation for developers and users, including a `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, and specific instructions for AI agents (`CLAUDE.md`, `GEMINI.md`).
+
+**Key Takeaway:** `vexy_glob` is a well-engineered, robust, and heavily-tested library that solves the common problem of slow file system operations in Python by leveraging Rust's performance. Its architecture is designed for speed, efficiency, and scalability, and it is supported by a modern and automated development infrastructure.
 
 </document_content>
 </document>
@@ -1374,6 +1671,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Smart-case Matching Optimization** ✅
+  - Implemented intelligent case sensitivity based on pattern content
+  - Patterns with uppercase letters are automatically case-sensitive
+  - Patterns with only lowercase letters are automatically case-insensitive
+  - Applies independently to glob patterns and content search patterns
+  - Can be overridden with explicit `case_sensitive` parameter
+  - Added comprehensive test suite in test_smart_case.py
+  - Fixed RegexMatcher to properly respect case sensitivity for content search
+- **Literal String Optimization** ✅
+  - Added PatternMatcher enum to optimize literal patterns vs glob patterns
+  - Literal patterns (no wildcards) use direct string comparison instead of glob matching
+  - Significantly faster for exact filename matches
+  - Handles both filename-only and full-path literal patterns correctly
+  - Fixed glob pattern matching to prepend **/ for patterns without path separators
+  - Added comprehensive test suite in test_literal_optimization.py
+- **Buffer Size Optimization** ✅
+  - Added BufferConfig to optimize channel capacity based on workload type
+  - Content search uses smaller channel buffer (500) as results are produced slowly
+  - Sorting operations use larger channel buffer (10,000) to collect all results efficiently
+  - Standard file finding scales channel buffer with thread count for better parallelism
+  - Memory usage capped to prevent excessive allocation
+  - Added comprehensive test suite in test_buffer_optimization.py
+- **Result Sorting Options** ✅
+  - Added `sort` parameter to `find()` function with options: 'name', 'path', 'size', 'mtime'
+  - Sorting automatically forces collection (returns list instead of iterator)
+  - Efficient implementation using Rust's sort_by_key for optimal performance
+  - Works seamlessly with as_path option for Path object results
+  - Added comprehensive test suite in test_sorting.py
+- **same_file_system Option** ✅
+  - Added `same_file_system` parameter to prevent crossing filesystem boundaries
+  - Useful for avoiding network mounts and external drives during traversal
+  - Works with both `find()` and `search()` functions
+  - Defaults to False to maintain backward compatibility
 - **Comprehensive Documentation** (Issue #102) ✅
   - Expanded README.md from 419 to 1464 lines (3.5x increase)
   - Added architecture diagram showing Rust/Python integration
@@ -1843,6 +2173,30 @@ When I say "/plan [requirement]", you must:
 - You may use these commands autonomously when appropriate
 
 
+**TLDR for vexy_glob Codebase**
+
+`vexy_glob` is a high-performance Python library, with its core implemented in Rust, designed to be a significantly faster and more feature-rich alternative to Python's built-in `glob` and `pathlib` modules for file system traversal and content searching.
+
+**Core Functionality & Architecture:**
+
+*   **Hybrid Python/Rust Architecture:** It combines a user-friendly Python API (`vexy_glob/__init__.py`) with a high-performance Rust backend (`src/lib.rs`). Communication between the two is handled by `PyO3`.
+*   **High-Performance File Finding:** The Rust core uses the `ignore` crate for extremely fast, parallel, and gitignore-aware directory traversal. It employs a producer-consumer model with `crossbeam-channel` to stream results back to Python, ensuring low, constant memory usage and providing the first results almost instantly.
+*   **Advanced Content Searching:** It integrates the power of `ripgrep`'s `grep-searcher` crate to perform fast, regex-based content searches within files, similar to modern tools like `rg`.
+*   **Rich Filtering Capabilities:** Beyond simple glob patterns (handled by the `globset` crate), it supports a wide array of filters including file size, modification/access/creation times (with human-readable formats), file types, and custom exclude patterns.
+*   **Build & Versioning System:** The project has been modernized to use `maturin` as its build backend, which is ideal for Rust-based Python extensions. Versioning is managed via git tags using `setuptools-scm`, with a `sync_version.py` script to keep `Cargo.toml` and `pyproject.toml` in sync.
+
+**Development, Testing, and CI/CD:**
+
+*   **Robust CI/CD Pipeline:** The project uses GitHub Actions for a comprehensive CI/CD setup. This includes:
+    *   **Testing:** Running tests on Linux, macOS, and Windows across a matrix of Python versions (3.8-3.12). Both Python (`pytest`) and Rust (`cargo test`) test suites are executed.
+    *   **Code Quality:** Enforcing code quality with `ruff` for Python and `cargo clippy`/`cargo fmt` for Rust.
+    *   **Builds & Releases:** Automatically building cross-platform wheels and source distributions using `cibuildwheel` and `maturin`.
+    *   **Publishing:** Automating releases to PyPI when a new version tag is pushed.
+    *   **Code Coverage:** Tracking test coverage for both Rust and Python code using `Codecov`.
+*   **Dependency Management:** `Dependabot` is configured to keep both Rust (`cargo`) and GitHub Actions dependencies up-to-date.
+*   **Comprehensive Documentation:** The project maintains detailed documentation for developers and users, including a `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, and specific instructions for AI agents (`CLAUDE.md`, `GEMINI.md`).
+
+**Key Takeaway:** `vexy_glob` is a well-engineered, robust, and heavily-tested library that solves the common problem of slow file system operations in Python by leveraging Rust's performance. Its architecture is designed for speed, efficiency, and scalability, and it is supported by a modern and automated development infrastructure.
 
 </document_content>
 </document>
@@ -2037,6 +2391,14 @@ strip = true
 lto = true
 panic = "abort"
 codegen-units = 1
+
+[dev-dependencies]
+criterion = "0.5"
+tempfile = "3.8"
+
+[[bench]]
+name = "hot_paths"
+harness = false
 
 
 </document_content>
@@ -2388,6 +2750,30 @@ When I say "/plan [requirement]", you must:
 - You may use these commands autonomously when appropriate
 
 
+**TLDR for vexy_glob Codebase**
+
+`vexy_glob` is a high-performance Python library, with its core implemented in Rust, designed to be a significantly faster and more feature-rich alternative to Python's built-in `glob` and `pathlib` modules for file system traversal and content searching.
+
+**Core Functionality & Architecture:**
+
+*   **Hybrid Python/Rust Architecture:** It combines a user-friendly Python API (`vexy_glob/__init__.py`) with a high-performance Rust backend (`src/lib.rs`). Communication between the two is handled by `PyO3`.
+*   **High-Performance File Finding:** The Rust core uses the `ignore` crate for extremely fast, parallel, and gitignore-aware directory traversal. It employs a producer-consumer model with `crossbeam-channel` to stream results back to Python, ensuring low, constant memory usage and providing the first results almost instantly.
+*   **Advanced Content Searching:** It integrates the power of `ripgrep`'s `grep-searcher` crate to perform fast, regex-based content searches within files, similar to modern tools like `rg`.
+*   **Rich Filtering Capabilities:** Beyond simple glob patterns (handled by the `globset` crate), it supports a wide array of filters including file size, modification/access/creation times (with human-readable formats), file types, and custom exclude patterns.
+*   **Build & Versioning System:** The project has been modernized to use `maturin` as its build backend, which is ideal for Rust-based Python extensions. Versioning is managed via git tags using `setuptools-scm`, with a `sync_version.py` script to keep `Cargo.toml` and `pyproject.toml` in sync.
+
+**Development, Testing, and CI/CD:**
+
+*   **Robust CI/CD Pipeline:** The project uses GitHub Actions for a comprehensive CI/CD setup. This includes:
+    *   **Testing:** Running tests on Linux, macOS, and Windows across a matrix of Python versions (3.8-3.12). Both Python (`pytest`) and Rust (`cargo test`) test suites are executed.
+    *   **Code Quality:** Enforcing code quality with `ruff` for Python and `cargo clippy`/`cargo fmt` for Rust.
+    *   **Builds & Releases:** Automatically building cross-platform wheels and source distributions using `cibuildwheel` and `maturin`.
+    *   **Publishing:** Automating releases to PyPI when a new version tag is pushed.
+    *   **Code Coverage:** Tracking test coverage for both Rust and Python code using `Codecov`.
+*   **Dependency Management:** `Dependabot` is configured to keep both Rust (`cargo`) and GitHub Actions dependencies up-to-date.
+*   **Comprehensive Documentation:** The project maintains detailed documentation for developers and users, including a `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, and specific instructions for AI agents (`CLAUDE.md`, `GEMINI.md`).
+
+**Key Takeaway:** `vexy_glob` is a well-engineered, robust, and heavily-tested library that solves the common problem of slow file system operations in Python by leveraging Rust's performance. Its architecture is designed for speed, efficiency, and scalability, and it is supported by a modern and automated development infrastructure.
 
 </document_content>
 </document>
@@ -2657,65 +3043,145 @@ When I say "/plan [requirement]", you must:
 
 ### 🔄 REMAINING PHASES
 
-#### Phase 8: Advanced Features - Partially Complete
+#### Phase 8: Performance Optimization - Final Stage
 
-Remaining filtering and optimization features:
+All major performance features are complete. Remaining optimization work:
 
-##### 8.1 Advanced Options
+##### 8.1 Hot Path Profiling & Optimization
 
-- [ ] Add same_file_system option to prevent crossing mount points
+- [ ] **Profiling Infrastructure Setup**
+  - Set up cargo flamegraph for detailed performance profiling
+  - Configure perf tools for Linux performance analysis
+  - Create reproducible benchmark scenarios for hot path identification
+  - Establish baseline performance metrics for regression testing
 
-##### 8.2 Performance Optimizations
+- [ ] **Critical Path Analysis**
+  - Profile directory traversal algorithms under various workloads
+  - Analyze glob pattern matching performance characteristics
+  - Identify memory allocation patterns and optimization opportunities
+  - Measure channel communication overhead and buffer utilization
 
-- [ ] Add result sorting options (name, size, mtime)
-- [ ] Implement smart-case matching optimization
-- [ ] Add literal string optimization paths
-- [ ] Configure optimal buffer sizes for different workloads
-- [ ] Optimize hot paths based on profiling
+- [ ] **Performance Optimization Implementation**
+  - Implement zero-copy string operations where feasible
+  - Optimize regex compilation and caching strategies
+  - Apply SIMD optimizations for pattern matching operations
+  - Reduce heap allocations in hot loops through object pooling
+  - Target: 20-30% additional performance improvement over current baseline
 
 #### Phase 9: Platform Testing and Validation
 
-Cross-platform testing and compatibility:
+Comprehensive cross-platform testing and real-world validation:
 
-##### 9.1 Platform-Specific Testing
+##### 9.1 Windows Ecosystem Validation
 
-- [ ] Test and fix Windows-specific path handling
-- [ ] Verify Linux compatibility across distributions
-- [ ] Test macOS-specific features (e.g., .DS_Store handling)
-- [ ] Handle platform-specific file system features
-- [ ] Test performance across different platforms
-- [ ] Verify Unicode path handling on all platforms
+- [ ] **Windows-Specific Path Handling**
+  - Test UNC paths (\\server\share\folder) and network drive mappings
+  - Validate Windows drive letters (C:\, D:\) and path separator handling
+  - Test case-insensitive filesystem behavior and path canonicalization
+  - Verify handling of Windows reserved names (CON, PRN, AUX, etc.)
+  - Test with Windows-specific file attributes and hidden files
 
-##### 9.2 Integration Testing
+- [ ] **Windows Development Environment Testing**
+  - Test integration with PowerShell, Command Prompt, and Windows Terminal
+  - Validate behavior with Windows Subsystem for Linux (WSL)
+  - Test with Visual Studio Code and other popular Windows IDEs
+  - Verify NTFS junction points and symbolic link handling
 
-- [ ] Test with real-world codebases
-- [ ] Benchmark against fd and ripgrep directly
-- [ ] Test with extremely large directories (1M+ files)
-- [ ] Verify memory usage stays constant
-- [ ] Test interruption and cleanup behavior
+##### 9.2 Linux Distribution Matrix Testing
 
-#### Phase 10: Release Preparation
+- [ ] **Multi-Distribution Compatibility**
+  - Test on Ubuntu LTS (20.04, 22.04), CentOS/RHEL 8/9, Debian 11/12
+  - Validate Alpine Linux compatibility for container deployments
+  - Test with Arch Linux for bleeding-edge package compatibility
 
-Final testing and PyPI release:
+- [ ] **Filesystem and Locale Testing**
+  - Test ext4, btrfs, xfs, and zfs filesystem compatibility
+  - Validate different character encodings (UTF-8, ISO-8859-1, etc.)
+  - Test with various locale settings and international file names
+  - Verify handling of special Linux filesystem features (/proc, /sys, /dev)
 
-##### 10.1 Final Testing
+##### 9.3 macOS Platform Integration
 
-- [ ] Run full test suite on all platforms via CI
-- [ ] Manual testing on Windows, Linux, macOS
-- [ ] Test installation from wheels on clean systems
-- [ ] Verify all examples work correctly
-- [ ] Performance regression testing
+- [ ] **macOS Filesystem Features**
+  - Test APFS and HFS+ compatibility with case-insensitive/preserving behavior
+  - Validate .DS_Store, .Trashes, and Resource Fork handling
+  - Test extended attributes (xattr) and metadata preservation
+  - Verify integration with Spotlight indexing and Time Machine exclusions
 
-##### 10.2 Release Process
+##### 9.4 Real-World Performance Validation
 
-- [ ] Update version to 1.0.0
-- [ ] Create comprehensive release notes
-- [ ] Build wheels for all platforms
-- [ ] Publish to Test PyPI
-- [ ] Test installation from Test PyPI
-- [ ] Publish to PyPI
-- [ ] Create GitHub release with artifacts
-- [ ] Announce on Python forums and social media
+- [ ] **Large Codebase Testing**
+  - Benchmark against Linux kernel source tree (~70K files)
+  - Test with Chromium codebase (~300K files) for scale validation
+  - Validate LLVM source tree performance characteristics
+  - Test with multiple large monorepos simultaneously
+
+- [ ] **Competitive Benchmarking**
+  - Direct performance comparison with `fd` on identical workloads
+  - Benchmark against `ripgrep` for content search operations
+  - Compare memory usage patterns under extreme load conditions
+  - Validate streaming performance advantages in real scenarios
+
+#### Phase 10: Production Release (v2.0.0)
+
+Professional release preparation and distribution:
+
+##### 10.1 Pre-Release Validation
+
+- [ ] **Comprehensive Testing Campaign**
+  - Execute full CI/CD matrix across all supported Python versions (3.8-3.12)
+  - Manual validation on clean virtual machines (Windows 11, Ubuntu 22.04, macOS Ventura)
+  - Installation testing from wheels on fresh environments without development tools
+  - End-to-end validation of all README.md examples and cookbook recipes
+  - Performance regression testing against v1.0.6 baseline measurements
+
+- [ ] **Quality Assurance**
+  - Code coverage analysis ensuring >95% test coverage maintenance
+  - Static analysis with clippy and security audit with cargo audit
+  - Documentation review for accuracy and completeness
+  - API stability validation and backward compatibility verification
+
+##### 10.2 Release Engineering
+
+- [ ] **Version Management and Artifacts**
+  - Update version to 2.0.0 in pyproject.toml (semantic versioning for new features)
+  - Generate comprehensive release notes highlighting all performance improvements
+  - Build and validate wheels for all supported platforms (manylinux_2_17, macOS Intel/ARM, Windows x64)
+  - Create source distribution with proper metadata and license information
+
+- [ ] **Staging and Validation**
+  - Upload release candidate to Test PyPI for pre-release validation
+  - Install and test functionality from Test PyPI on multiple environments
+  - Validate wheel compatibility across different Python installations
+  - Create staging documentation and verify all links and examples
+
+##### 10.3 Launch and Distribution
+
+- [ ] **Official Release**
+  - Publish stable v2.0.0 release to PyPI with all platform wheels
+  - Create GitHub release with detailed changelog and downloadable artifacts
+  - Update project shields, badges, and documentation with new version information
+  - Tag release in git with signed commit for authenticity
+
+- [ ] **Community Outreach**
+  - Announce on Python Package Index with compelling description
+  - Submit to Hacker News, Reddit r/Python, and Python developer communities
+  - Reach out to Python Weekly newsletter and relevant podcasts
+  - Share on professional networks and Python-focused social media channels
+
+##### 10.4 Post-Release Operations
+
+- [ ] **Monitoring and Support**
+  - Monitor PyPI download statistics and user adoption metrics
+  - Set up GitHub issue templates for bug reports and feature requests
+  - Establish regular maintenance schedule for dependency updates
+  - Create contributing guidelines for community involvement
+
+- [ ] **Future Planning**
+  - Analyze user feedback and feature requests for roadmap planning
+  - Plan next major version features based on community needs
+  - Establish performance benchmarking as continuous integration
+  - Consider integration opportunities with popular Python tools and frameworks
 
 ## API Specification
 
@@ -4292,46 +4758,78 @@ If you find `vexy_glob` useful, please consider giving it a star on [GitHub](htt
 ## 🚀 CURRENT PRIORITIES
 
 ### Priority 1: Performance Optimizations
-- [ ] Add same_file_system option to prevent crossing mount points
-- [ ] Add result sorting options (name, size, mtime)
-- [ ] Implement smart-case matching optimization
-- [ ] Add literal string optimization paths
-- [ ] Configure optimal buffer sizes for different workloads
-- [ ] Optimize hot paths based on profiling
 
-### Priority 2: Platform Testing
-- [ ] Test and fix Windows-specific path handling
-- [ ] Verify Linux compatibility across distributions
-- [ ] Test macOS-specific features (e.g., .DS_Store handling)
-- [ ] Handle platform-specific file system features
-- [ ] Test performance across different platforms
-- [ ] Verify Unicode path handling on all platforms
-- [ ] Test with real-world codebases
-- [ ] Benchmark against fd and ripgrep directly
-- [ ] Test with extremely large directories (1M+ files)
-- [ ] Verify memory usage stays constant
-- [ ] Test interruption and cleanup behavior
+- [ ] **Hot Path Profiling & Optimization**
+  - Profile critical performance paths using cargo flamegraph and perf
+  - Identify bottlenecks in directory traversal and pattern matching
+  - Optimize memory allocations and reduce unnecessary string copies
+  - Implement SIMD optimizations where applicable
+  - Benchmark improvements against baseline performance metrics
+  - Target: Additional 20-30% performance improvement in hot paths
 
-### Priority 3: Release Preparation
-- [ ] Run full test suite on all platforms via CI
-- [ ] Manual testing on Windows, Linux, macOS
-- [ ] Test installation from wheels on clean systems
-- [ ] Verify all examples work correctly
-- [ ] Performance regression testing
-- [ ] Update version to 1.0.0
-- [ ] Create comprehensive release notes
-- [ ] Build wheels for all platforms
-- [ ] Publish to Test PyPI
-- [ ] Test installation from Test PyPI
-- [ ] Publish to PyPI
-- [ ] Create GitHub release with artifacts
-- [ ] Announce on Python forums and social media
+### Priority 2: Platform Testing & Validation
+
+- [ ] **Windows Compatibility Testing**
+  - Test UNC paths (\\server\share) and drive letters (C:\)
+  - Verify handling of Windows path separators and case insensitivity
+  - Test with Windows-specific files (pagefile.sys, System Volume Information)
+  - Validate symlink and junction handling on NTFS
+  - Test with PowerShell and cmd.exe environments
+
+- [ ] **Linux Distribution Testing**
+  - Test on Ubuntu LTS, CentOS/RHEL, Debian, Alpine Linux
+  - Verify different filesystem types (ext4, btrfs, xfs, zfs)
+  - Test with different locale settings and character encodings
+  - Validate handling of special files (/proc, /sys, /dev)
+  - Test with container environments (Docker, Podman)
+
+- [ ] **macOS Ecosystem Testing**
+  - Test with .DS_Store, .Trashes, and Resource Forks
+  - Verify APFS and HFS+ filesystem compatibility
+  - Test with macOS-specific extended attributes and metadata
+  - Validate case-preservation behavior on case-insensitive filesystems
+  - Test with Time Machine and Spotlight exclusions
+
+- [ ] **Real-World Validation**
+  - Test against large codebases (Linux kernel, Chromium, LLVM)
+  - Benchmark vs fd and ripgrep on identical workloads
+  - Stress test with 1M+ file directories
+  - Memory profiling under extreme loads
+  - Signal handling and graceful shutdown testing
+
+### Priority 3: Production Release (v2.0.0)
+
+- [ ] **Pre-Release Validation**
+  - Execute full CI/CD test matrix (Python 3.8-3.12, Linux/macOS/Windows)
+  - Manual verification on clean VM environments
+  - Installation testing from wheels on fresh systems
+  - Validation of all README.md examples and cookbook recipes
+  - Performance regression testing against v1.0.6 baseline
+
+- [ ] **Release Engineering**
+  - Update version to 2.0.0 in pyproject.toml (semantic versioning for new features)
+  - Generate comprehensive release notes highlighting performance improvements
+  - Build and test wheels for all supported platforms (Linux x86_64, macOS Intel/ARM, Windows x64)
+  - Upload to Test PyPI and validate installation/functionality
+  - Create staging environment for final validation
+
+- [ ] **Launch & Distribution**
+  - Publish stable release to PyPI with all platform wheels
+  - Create GitHub release with detailed changelog and downloadable artifacts
+  - Update project documentation and badges with new version
+  - Announce on Python Package Index, Hacker News, Reddit r/Python
+  - Submit to Python Weekly newsletter and relevant community channels
+
+- [ ] **Post-Release Monitoring**
+  - Monitor PyPI download statistics and user feedback
+  - Set up issue templates for bug reports and feature requests  
+  - Establish maintenance schedule for dependency updates
+  - Plan roadmap for future enhancements based on user adoption
 
 ## Notes
 
 - Build system has been modernized to use maturin directly instead of hatch
 - Version management now uses git tags with setuptools-scm
-- Current version: 1.0.3
 
 </document_content>
 </document>
@@ -4346,9 +4844,9 @@ If you find `vexy_glob` useful, please consider giving it a star on [GitHub](htt
 ### Active Tasks
 
 1. **Performance Enhancements**
-   - Add same_file_system option to prevent crossing mount points
-   - Implement result sorting options (name, size, mtime)
-   - Add smart-case matching optimization
+   - ✅ Add same_file_system option to prevent crossing mount points
+   - ✅ Implement result sorting options (name, size, mtime)
+   - ✅ Add smart-case matching optimization
    - Configure optimal buffer sizes for different workloads
    - Profile and optimize hot paths
 
@@ -4375,8 +4873,57 @@ If you find `vexy_glob` useful, please consider giving it a star on [GitHub](htt
 - Configured git-tag-based versioning with setuptools-scm
 - Created sync_version.py for Cargo.toml synchronization
 - Updated CI/CD workflows
+
+### same_file_system Option ✅
+- Added `same_file_system` parameter to both `find()` and `search()` functions
+- Updated Rust function signatures and WalkBuilder configuration
+- Added Python API parameter with documentation
+- Created test suite in test_same_file_system.py
+- Updated CHANGELOG.md with feature documentation
+
+### Result Sorting Options ✅
+- Added `sort` parameter to `find()` function with options: 'name', 'path', 'size', 'mtime'
+- Implemented efficient sorting in Rust using sort_by_key
+- Sorting automatically forces collection (returns list instead of iterator)
+- Added proper handling to prevent sort parameter being passed to search function
+- Created comprehensive test suite in test_sorting.py with 9 test cases
+- Updated Python API documentation and type hints
+- Updated CHANGELOG.md with feature documentation
+
+### Smart-case Matching Optimization ✅
+- Implemented intelligent case sensitivity based on pattern content
+- Added `_has_uppercase()` helper function to detect uppercase in patterns
+- Modified find() to calculate separate case sensitivity for glob and content patterns
+- Fixed Rust RegexMatcher to use RegexMatcherBuilder with case_insensitive flag
+- Created comprehensive test suite in test_smart_case.py with 8 test cases
+- Updated Python API to handle smart-case logic when case_sensitive=None
+- Glob and content patterns now have independent case sensitivity behavior
+
+### Literal String Optimization ✅
+- Added PatternMatcher enum in Rust to handle literal vs glob patterns differently
+- Implemented `is_literal_pattern()` function to detect patterns without wildcards
+- Literal patterns use direct string comparison for better performance
+- Fixed issue where glob patterns weren't matching correctly by prepending **/ to patterns without path separators
+- Added logic to match literal patterns against filename only or full path based on pattern content
+- Created comprehensive test suite in test_literal_optimization.py with 4 test cases
+- Verified performance improvement for exact filename matches
+
+### Buffer Size Optimization ✅
+- Added BufferConfig struct to dynamically optimize channel capacity based on workload characteristics
+- Implemented workload-specific buffer sizing: content search (500), sorting (10,000), standard finding (1000 * threads)
+- Channel capacity scales with thread count for standard finding to improve parallelism
+- Memory usage capped at reasonable limits to prevent excessive allocation
+- Created comprehensive test suite in test_buffer_optimization.py with 5 test cases covering different workloads
+- Verified stable memory usage and improved performance for different operation types
 </document_content>
 </document>
+
+# File: /Users/adam/Developer/vcs/github.vexyart/vexy-glob/benches/hot_paths.rs
+# Language: rust
+
+struct CountSink {
+}
+
 
 <document index="19">
 <source>build.sh</source>
@@ -4485,6 +5032,41 @@ def vexy_glob_search(()):
 def glob_search(()):
 
 def pathlib_search(()):
+
+
+# File: /Users/adam/Developer/vcs/github.vexyart/vexy-glob/profile_performance.py
+# Language: python
+
+import cProfile
+import tempfile
+from pathlib import Path
+import vexy_glob
+import pstats
+import pstats
+import pstats
+import time
+import shutil
+
+def create_test_environment(()):
+    """Create a large test environment for profiling."""
+
+def profile_file_finding((tmpdir)):
+    """Profile file finding operations."""
+
+def find_python_files(()):
+
+def profile_content_search((tmpdir)):
+    """Profile content search operations."""
+
+def search_target_content(()):
+
+def profile_sorting_operations((tmpdir)):
+    """Profile sorting operations."""
+
+def sort_by_name(()):
+
+def benchmark_operations((tmpdir)):
+    """Benchmark different operations for comparison."""
 
 
 <document index="20">
@@ -4615,6 +5197,9 @@ ignore = ["E501"]  # Line too long (handled by formatter)
 # Language: rust
 
 struct SearchResultRust {
+}
+
+struct BufferConfig {
 }
 
 struct VexyGlobIterator {
@@ -4792,6 +5377,31 @@ def test_content_search_in_temp_dir((temp_dir_with_content)):
 
 def test_content_search_regex_patterns((temp_dir_with_content)):
     """Test content search with regex patterns."""
+
+
+# File: /Users/adam/Developer/vcs/github.vexyart/vexy-glob/tests/test_buffer_optimization.py
+# Language: python
+
+import tempfile
+from pathlib import Path
+import time
+import vexy_glob
+import tracemalloc
+
+def test_sorting_workload_performance(()):
+    """Test that sorting workload is optimized differently."""
+
+def test_content_search_performance(()):
+    """Test that content search workload is optimized."""
+
+def test_standard_find_performance(()):
+    """Test standard file finding performance."""
+
+def test_threading_scaling(()):
+    """Test that buffer sizes scale with thread count."""
+
+def test_memory_usage_stable(()):
+    """Test that buffer optimizations don't cause memory issues."""
 
 
 # File: /Users/adam/Developer/vcs/github.vexyart/vexy-glob/tests/test_cli.py
@@ -5136,6 +5746,43 @@ def test_complex_exclude_patterns(()):
     """Test complex exclude pattern scenarios."""
 
 
+# File: /Users/adam/Developer/vcs/github.vexyart/vexy-glob/tests/test_literal_optimization.py
+# Language: python
+
+import tempfile
+from pathlib import Path
+import time
+import vexy_glob
+
+def test_literal_pattern_matching(()):
+    """Test that literal patterns work correctly."""
+
+def test_literal_vs_glob_patterns(()):
+    """Test that both literal and glob patterns work in the same function."""
+
+def test_literal_pattern_performance(()):
+    """Test that literal patterns are faster than glob patterns."""
+
+def test_literal_pattern_with_filters(()):
+    """Test literal patterns work with other filters."""
+
+
+# File: /Users/adam/Developer/vcs/github.vexyart/vexy-glob/tests/test_same_file_system.py
+# Language: python
+
+import os
+import tempfile
+from pathlib import Path
+import pytest
+import vexy_glob
+
+def test_same_file_system_basic(()):
+    """Test that same_file_system option is accepted."""
+
+def test_same_file_system_with_search(()):
+    """Test that same_file_system works with content search."""
+
+
 # File: /Users/adam/Developer/vcs/github.vexyart/vexy-glob/tests/test_size_filtering.py
 # Language: python
 
@@ -5162,6 +5809,77 @@ def test_size_filtering_with_directories(()):
 
 def test_size_filtering_with_content_search(()):
     """Test that size filtering works with content search."""
+
+
+# File: /Users/adam/Developer/vcs/github.vexyart/vexy-glob/tests/test_smart_case.py
+# Language: python
+
+import tempfile
+from pathlib import Path
+import pytest
+import vexy_glob
+
+def test_smart_case_lowercase_pattern(()):
+    """Test that lowercase patterns match case-insensitively."""
+
+def test_smart_case_uppercase_pattern(()):
+    """Test that patterns with uppercase match case-sensitively."""
+
+def test_smart_case_mixed_pattern(()):
+    """Test mixed case patterns."""
+
+def test_smart_case_with_wildcards(()):
+    """Test smart case with wildcard patterns."""
+
+def test_smart_case_explicit_sensitive(()):
+    """Test explicit case_sensitive=True."""
+
+def test_smart_case_explicit_insensitive(()):
+    """Test explicit case_sensitive=False."""
+
+def test_smart_case_content_search(()):
+    """Test smart case with content search."""
+
+def test_smart_case_both_patterns(()):
+    """Test smart case with both glob and content patterns."""
+
+
+# File: /Users/adam/Developer/vcs/github.vexyart/vexy-glob/tests/test_sorting.py
+# Language: python
+
+import os
+import tempfile
+import time
+from pathlib import Path
+import pytest
+import vexy_glob
+
+def test_sort_by_name(()):
+    """Test sorting results by filename."""
+
+def test_sort_by_path(()):
+    """Test sorting results by full path."""
+
+def test_sort_by_size(()):
+    """Test sorting results by file size."""
+
+def test_sort_by_mtime(()):
+    """Test sorting results by modification time."""
+
+def test_sort_forces_collection(()):
+    """Test that sorting forces collection (returns list not iterator)."""
+
+def test_sort_with_as_path(()):
+    """Test sorting with Path objects."""
+
+def test_invalid_sort_option(()):
+    """Test that invalid sort option raises error."""
+
+def test_sort_empty_results(()):
+    """Test sorting with no matching files."""
+
+def test_sort_mixed_types(()):
+    """Test sorting with mixed file types."""
 
 
 # File: /Users/adam/Developer/vcs/github.vexyart/vexy-glob/tests/test_symlinks.py
@@ -5286,6 +6004,7 @@ from datetime import datetime, timezone
 import time
 from . import _vexy_glob
 from typing import TypedDict
+import functools
 
 class SearchResult(T, y, p, e, d, D, i, c, t):
     """Result from content search."""
@@ -5307,6 +6026,12 @@ def __init__((self, message: str, pattern: str)):
 
 def _parse_time_param((value: Union[float, int, str, datetime, None])) -> Optional[float]:
     """ Convert various time formats to Unix timestamp...."""
+
+def _has_uppercase((pattern: str)) -> bool:
+    """Check if a pattern contains any uppercase letters. Cached for performance."""
+
+def _is_case_sensitive_pattern((pattern: str)) -> bool:
+    """Fast path for determining pattern case sensitivity."""
 
 def find((
     pattern: str = "*",
@@ -5331,6 +6056,8 @@ def find((
     custom_ignore_files: Optional[Union[str, List[str]]] = None,
     case_sensitive: Optional[bool] = None,  # None = smart case
     follow_symlinks: bool = False,
+    same_file_system: bool = False,
+    sort: Optional[Literal["name", "path", "size", "mtime"]] = None,
     threads: Optional[int] = None,
     as_path: bool = False,
     as_list: bool = False,

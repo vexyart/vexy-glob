@@ -8,6 +8,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Smart-case Matching Optimization** ✅
+  - Implemented intelligent case sensitivity based on pattern content
+  - Patterns with uppercase letters are automatically case-sensitive
+  - Patterns with only lowercase letters are automatically case-insensitive
+  - Applies independently to glob patterns and content search patterns
+  - Can be overridden with explicit `case_sensitive` parameter
+  - Added comprehensive test suite in test_smart_case.py
+  - Fixed RegexMatcher to properly respect case sensitivity for content search
+- **Literal String Optimization** ✅
+  - Added PatternMatcher enum to optimize literal patterns vs glob patterns
+  - Literal patterns (no wildcards) use direct string comparison instead of glob matching
+  - Significantly faster for exact filename matches
+  - Handles both filename-only and full-path literal patterns correctly
+  - Fixed glob pattern matching to prepend **/ for patterns without path separators
+  - Added comprehensive test suite in test_literal_optimization.py
+- **Buffer Size Optimization** ✅
+  - Added BufferConfig to optimize channel capacity based on workload type
+  - Content search uses smaller channel buffer (500) as results are produced slowly
+  - Sorting operations use larger channel buffer (10,000) to collect all results efficiently
+  - Standard file finding scales channel buffer with thread count for better parallelism
+  - Memory usage capped to prevent excessive allocation
+  - Added comprehensive test suite in test_buffer_optimization.py
+- **Result Sorting Options** ✅
+  - Added `sort` parameter to `find()` function with options: 'name', 'path', 'size', 'mtime'
+  - Sorting automatically forces collection (returns list instead of iterator)
+  - Efficient implementation using Rust's sort_by_key for optimal performance
+  - Works seamlessly with as_path option for Path object results
+  - Added comprehensive test suite in test_sorting.py
+- **same_file_system Option** ✅
+  - Added `same_file_system` parameter to prevent crossing filesystem boundaries
+  - Useful for avoiding network mounts and external drives during traversal
+  - Works with both `find()` and `search()` functions
+  - Defaults to False to maintain backward compatibility
 - **Comprehensive Documentation** (Issue #102) ✅
   - Expanded README.md from 419 to 1464 lines (3.5x increase)
   - Added architecture diagram showing Rust/Python integration
