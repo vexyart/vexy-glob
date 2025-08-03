@@ -1,12 +1,12 @@
 [project]
 name = "vexy-glob"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Vexy Glob fast file finding"
 readme = "README.md"
 requires-python = ">=3.8"
 license = { text = "MIT" }
 authors = [
-  { name = "Adam Twardoch", email = "adam+github@twardoch.com" },
+  { name = "Fontlab Ltd.", email = "opensource@vexy.art" },
 ]
 keywords = ["filesystem", "find", "glob", "parallel", "rust", "search"]
 classifiers = [
@@ -38,8 +38,8 @@ dependencies = [
 vg = "vexy_glob.__main__:main"
 
 [build-system]
-requires = ["maturin>=1.4,<2.0"]
-build-backend = "maturin"
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
 
 [tool.cibuildwheel]
 build = ["cp38-*", "cp39-*", "cp310-*", "cp311-*", "cp312-*"]
@@ -56,6 +56,18 @@ archs = ["x86_64", "arm64", "universal2"]
 
 [tool.cibuildwheel.windows]
 archs = ["AMD64"]
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["vexy_glob"]
+
+[tool.hatch.build.targets.wheel.hooks.maturin]
+[tool.hatch.build.targets.sdist.hooks.maturin]
 
 [tool.hatch.envs.default]
 dependencies = [

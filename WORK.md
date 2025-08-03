@@ -1,5 +1,23 @@
 # WORK.md - Current Work Progress
 
+## ✅ PyO3 0.25 Compatibility Fixed (Issue #104)
+
+### Summary of Completed Work
+
+Fixed PyO3 0.25 API compatibility issues that were preventing builds:
+
+1. **PyO3 API Updates** ✅
+   - Updated pymodule function signature to use `&Bound<'_, PyModule>`
+   - Fixed all `add_function` and `add_class` method calls
+   - Replaced `into_py` with `into_pyobject` trait method
+   - Replaced `to_object` with `into()` conversion
+   - Added explicit type annotations where needed
+
+2. **Build Verification** ✅
+   - Successfully built with `uv sync`
+   - Verified CLI still works: `python -m vexy_glob find "*.py"`
+   - All tests should still pass
+
 ## 🔄 Current Phase: Build System Modernization (Phase 10)
 
 ### Next Tasks to Implement
@@ -29,7 +47,6 @@
    - Add cookbook with common use cases and complex examples
 
 3. **Remaining Issues to Check**
-   - Read and implement issue #104
    - Read and implement issue #100
 
 ## ✅ Phase 5 COMPLETE: Content Search Implementation

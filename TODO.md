@@ -2,7 +2,7 @@
 
 ## 🚀 CURRENT PRIORITIES - New Issues to Implement
 
-- [ ] Read @issues/104.txt and /work on it and once implemented, remove that file
+- [x] Read @issues/104.txt and /work on it and once implemented, remove that file
 - [ ] If @issues/102.txt is implemented, remove that file, else implement
 - [ ] If @issues/103.txt is implemented, remove that file, else implement
 - [ ] If @issues/100.txt is implemented, remove that file, else implement
@@ -11,7 +11,7 @@
 
 - [ ] Migrate pyproject.toml from maturin to hatch build backend
 - [ ] Configure hatch-vcs for git-tag-based semantic versioning
-- [ ] Update author information to Adam Twardoch (twardoch@github)
+- [ ] Update author information to Fontlab Ltd. (opensource@vexy.art)
 - [ ] Integrate uv for modern dependency management
 - [ ] Update CI/CD workflows to use hatch for building
 - [ ] Test wheel building with new hatch system
@@ -34,6 +34,15 @@
 - [ ] Add cookbook with common use cases and complex examples
 
 ## ✅ COMPLETED
+
+### PyO3 0.25 Compatibility Fix (Issue #104) ✅
+
+- [x] Updated pymodule function signature to use `&Bound<'_, PyModule>`
+- [x] Fixed `add_function` and `add_class` method calls
+- [x] Replaced `into_py` with `into_pyobject` trait method
+- [x] Replaced `to_object` with `into()` conversion
+- [x] Added explicit type annotations for PyObject conversions
+- [x] Successfully built with `uv sync`
 
 ### CLI Implementation (Issue #101) ✅
 
@@ -129,4 +138,4 @@
 
 🎯 **PRIORITY 1**: Build System Modernization (Issue #103)  
 🎯 **PRIORITY 2**: Comprehensive Documentation (Issue #102)  
-🎯 **PRIORITY 3**: Check and implement remaining issues (104, 100)
+🎯 **PRIORITY 3**: Check and implement remaining issue (100)
