@@ -15,16 +15,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Replaced `to_object` with `into()` conversion
   - Added explicit type annotations for PyObject conversions
   - Successfully builds with PyO3 0.25 and `uv sync`
+- **Build System Duplicate Wheel Issue** ✅
+  - Fixed issue where hatch was creating duplicate dev wheels
+  - Switched to maturin as the build backend
+  - Configured setuptools-scm for git-tag-based versioning
+  - Created sync_version.py script for Cargo.toml synchronization
+  - Updated CI/CD to use maturin directly
+  - Created build.sh script for consistent builds
 
 ### Added
 - **NEW: Build System Modernization** ✅
-  - Migrated from setuptools to hatch build backend
-  - Integrated hatch-vcs for git-tag-based semantic versioning
+  - Switched to maturin as the primary build backend
+  - Integrated setuptools-scm for git-tag-based semantic versioning
   - Dynamic version management from git tags (no more manual version updates)
-  - Custom build hook for seamless maturin integration
-  - Automatic Cargo.toml version synchronization
-  - Updated CI/CD workflows to use hatch for builds
+  - Automatic Cargo.toml version synchronization via sync_version.py
+  - Updated CI/CD workflows to use maturin directly
   - Author information updated to Adam Twardoch (adam+github@twardoch.com)
+  - Created build.sh for streamlined release builds
 - **NEW: Command-Line Interface (CLI)** ✅
   - `vexy_glob find` command for finding files with all Python API features
   - `vexy_glob search` command for content searching with grep-like output  

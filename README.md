@@ -262,23 +262,137 @@ Benchmarks on a directory with 100,000 files:
 
 ## Development
 
-This project is built with `maturin`. To get started, you'll need Rust and Python installed.
+This project is built with `maturin` - a tool for building and publishing Rust-based Python extensions.
+
+### Prerequisites
+
+- Python 3.8 or later
+- Rust toolchain (install from [rustup.rs](https://rustup.rs/))
+- `uv` for fast Python package management (optional but recommended)
+
+### Setting Up Development Environment
 
 ```bash
 # Clone the repository
 git clone https://github.com/vexyart/vexy-glob.git
-cd vexy_glob
+cd vexy-glob
 
-# Set up a virtual environment
-python -m venv .venv
-source .venv/bin/activate
+# Set up a virtual environment (using uv for faster installation)
+pip install uv
+uv venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-# Install dependencies
-pip install -r requirements.txt
+# Install development dependencies
+uv sync
 
 # Build the Rust extension in development mode
+python sync_version.py  # Sync version from git tags to Cargo.toml
 maturin develop
+
+# Run tests
+pytest tests/
+
+# Run benchmarks
+pytest tests/test_benchmarks.py -v --benchmark-only
 ```
+
+### Building Release Artifacts
+
+The project uses a streamlined build system with automatic versioning from git tags.
+
+#### Quick Build
+
+```bash
+# Build both wheel and source distribution
+./build.sh
+```
+
+This script will:
+1. Sync the version from git tags to `Cargo.toml`
+2. Build an optimized wheel for your platform
+3. Build a source distribution (sdist)
+4. Place all artifacts in the `dist/` directory
+
+#### Manual Build
+
+```bash
+# Ensure you have the latest tags
+git fetch --tags
+
+# Sync version to Cargo.toml
+python sync_version.py
+
+# Build wheel (platform-specific)
+python -m maturin build --release -o dist/
+
+# Build source distribution
+python -m maturin sdist -o dist/
+```
+
+### Build System Details
+
+The project uses:
+- **maturin** as the build backend for creating Python wheels from Rust code
+- **setuptools-scm** for automatic versioning based on git tags
+- **sync_version.py** to synchronize versions between git tags and `Cargo.toml`
+
+Key files:
+- `pyproject.toml` - Python project configuration with maturin as build backend
+- `Cargo.toml` - Rust project configuration
+- `sync_version.py` - Version synchronization script
+- `build.sh` - Convenience build script
+
+### Versioning
+
+Versions are managed through git tags:
+
+```bash
+# Create a new version tag
+git tag v1.0.4
+git push origin v1.0.4
+
+# Build with the new version
+./build.sh
+```
+
+The version will be automatically detected and used for both the Python package and Rust crate.
+
+### Project Structure
+
+```
+vexy-glob/
+├── src/                    # Rust source code
+│   ├── lib.rs             # Main Rust library with PyO3 bindings
+│   └── ...
+├── vexy_glob/             # Python package
+│   ├── __init__.py        # Python API wrapper
+│   ├── __main__.py        # CLI implementation
+│   └── ...
+├── tests/                 # Python tests
+│   ├── test_*.py          # Unit and integration tests
+│   └── test_benchmarks.py # Performance benchmarks
+├── Cargo.toml             # Rust project configuration
+├── pyproject.toml         # Python project configuration
+├── sync_version.py        # Version synchronization script
+└── build.sh               # Build automation script
+```
+
+### CI/CD
+
+The project uses GitHub Actions for continuous integration:
+- Testing on Linux, macOS, and Windows
+- Python versions 3.8 through 3.12
+- Automatic wheel building for releases
+- Cross-platform compatibility testing
+
+### Troubleshooting
+
+If you encounter build issues:
+
+1. **Rust not found**: Install Rust from [rustup.rs](https://rustup.rs/)
+2. **maturin not found**: Run `pip install maturin`
+3. **Version mismatch**: Run `python sync_version.py` to sync versions
+4. **Import errors**: Ensure you've run `maturin develop` after changes
 
 ## License
 

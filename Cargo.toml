@@ -1,6 +1,6 @@
 [package]
 name = "vexy_glob"
-version = "1.0.2"
+version = "1.0.3"
 authors = ["Fontlab Ltd. <opensource@vexy.art>"]
 edition = "2021"
 description = "Vexy Glob fast file finding for Python"
