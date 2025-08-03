@@ -16,7 +16,7 @@ use grep_regex::RegexMatcher;
 
 /// Main module definition for vexy_glob
 #[pymodule]
-fn _vexy_glob(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
+fn _vexy_glob(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(find, m)?)?;
     m.add_function(wrap_pyfunction!(search, m)?)?;
     m.add_class::<VexyGlobIterator>()?;
@@ -66,7 +66,7 @@ impl VexyGlobIterator {
                             Some(path_class.call1((path_str,)).ok()?.into())
                         } else {
                             // Return as string
-                            Some(path.to_string_lossy().to_string().into_py(py))
+                            Some(path.to_string_lossy().to_string().into_pyobject(py).ok()?.into())
                         }
                     })
                 }
@@ -75,13 +75,13 @@ impl VexyGlobIterator {
                         // Create a dictionary representing SearchResult
                         let result_dict = PyDict::new(py);
                         
-                        let path_obj = if slf.as_path_objects {
+                        let path_obj: PyObject = if slf.as_path_objects {
                             let pathlib = py.import("pathlib").ok()?;
                             let path_class = pathlib.getattr("Path").ok()?;
                             let path_str = search_result.path.to_string_lossy().to_string();
                             path_class.call1((path_str,)).ok()?.into()
                         } else {
-                            search_result.path.to_string_lossy().to_string().into_py(py)
+                            search_result.path.to_string_lossy().to_string().into_pyobject(py).ok()?.into()
                         };
                         
                         result_dict.set_item("path", path_obj).ok()?;
@@ -358,7 +358,7 @@ fn find(
         Ok(Py::new(py, VexyGlobIterator {
             receiver: Some(rx),
             as_path_objects,
-        })?.to_object(py))
+        })?.into())
     } else {
         // Collect all results into a list
         py.allow_threads(|| {
@@ -608,7 +608,7 @@ fn search(
         Ok(Py::new(py, VexyGlobIterator {
             receiver: Some(rx),
             as_path_objects,
-        })?.to_object(py))
+        })?.into())
     } else {
         // Collect all results into a list
         py.allow_threads(|| {
@@ -628,13 +628,13 @@ fn search(
             for search_result in results {
                 let result_dict = PyDict::new(py);
                 
-                let path_obj = if as_path_objects {
+                let path_obj: PyObject = if as_path_objects {
                     let pathlib = py.import("pathlib")?;
                     let path_class = pathlib.getattr("Path")?;
                     let path_str = search_result.path.to_string_lossy().to_string();
                     path_class.call1((path_str,))?.into()
                 } else {
-                    search_result.path.to_string_lossy().to_string().into_py(py)
+                    search_result.path.to_string_lossy().to_string().into_pyobject(py)?.into()
                 };
                 
                 result_dict.set_item("path", path_obj)?;

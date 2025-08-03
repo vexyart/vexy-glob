@@ -3,30 +3,9 @@
 ## 🚀 CURRENT PRIORITIES - New Issues to Implement
 
 - [ ] Read @issues/104.txt and /work on it and once implemented, remove that file
-- [x] If @issues/101.txt is implemented, remove that file, else implement
 - [ ] If @issues/102.txt is implemented, remove that file, else implement
 - [ ] If @issues/103.txt is implemented, remove that file, else implement
 - [ ] If @issues/100.txt is implemented, remove that file, else implement
-
-### Phase 9: CLI Implementation (Issue #101) ✅ COMPLETED
-
-- [x] Implement `__main__.py` with fire-based CLI using class-based structure
-- [x] Create `vexy_glob find` command with pattern argument and all options
-  - [x] Support --root, --min-size, --max-size, --mtime-after, --mtime-before options
-  - [x] Support --no-gitignore, --hidden, --case-sensitive, --type, --extension, --depth options
-- [x] Create `vexy_glob search` command with pattern and content_pattern arguments
-  - [x] Support all find options plus --no-color
-  - [x] Format output as path:line_number:line_text (grep-style)
-- [x] Add human-readable size parsing (10k, 1M, 1G format)
-- [x] Implement colored output using rich library with match highlighting
-- [x] Use rich.print for colored output formatting
-- [x] Add `--no-color` option for non-interactive usage
-- [x] Handle broken pipes gracefully for Unix pipelines
-- [x] Create comprehensive CLI test suite
-- [x] Test argument parsing and validation
-- [x] Test output formatting and match highlighting
-- [x] Verify shell pipeline compatibility
-- [x] Ensure CLI is available as `vexy_glob` command after installation
 
 ### Phase 10: Build System Modernization (Issue #103)
 
@@ -55,6 +34,17 @@
 - [ ] Add cookbook with common use cases and complex examples
 
 ## ✅ COMPLETED
+
+### CLI Implementation (Issue #101) ✅
+
+- [x] Implement `__main__.py` with fire-based CLI using class-based structure
+- [x] Create `vexy_glob find` command with pattern argument and all options
+- [x] Create `vexy_glob search` command with pattern and content_pattern arguments
+- [x] Add human-readable size parsing (10k, 1M, 1G format)
+- [x] Implement colored output using rich library with match highlighting
+- [x] Handle broken pipes gracefully for Unix pipelines
+- [x] Create comprehensive CLI test suite
+- [x] Ensure CLI is available as `vexy_glob` command after installation
 
 ### Core Functionality ✅
 
@@ -137,6 +127,6 @@
 
 ## Current Focus
 
-🎯 **PRIORITY 1**: CLI Implementation (Issue #101)  
-🎯 **PRIORITY 2**: Build System Modernization (Issue #103)  
-🎯 **PRIORITY 3**: Comprehensive Documentation (Issue #102)
+🎯 **PRIORITY 1**: Build System Modernization (Issue #103)  
+🎯 **PRIORITY 2**: Comprehensive Documentation (Issue #102)  
+🎯 **PRIORITY 3**: Check and implement remaining issues (104, 100)
