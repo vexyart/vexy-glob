@@ -42,7 +42,7 @@ jobs:
         run: pytest tests/ --cov=vexy_glob --cov-report=lcov:python-lcov.info
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         with:
           files: ./rust-lcov.info,./python-lcov.info
           flags: unittests
