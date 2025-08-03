@@ -1,0 +1,98 @@
+[project]
+name = "vexy-glob"
+version = "0.1.0"
+description = "Vexy Glob fast file finding"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [
+  { name = "Adam Twardoch", email = "adam+github@twardoch.com" },
+]
+keywords = ["filesystem", "find", "glob", "parallel", "rust", "search"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Rust",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: System :: Filesystems",
+]
+dependencies = [
+  "fire>=0.7.0",
+  "rich>=14.1.0",
+]
+
+[project.urls]
+"Bug Tracker" = "https://github.com/vexyart/vexy-glob/issues"
+"Homepage" = "https://github.com/vexyart/vexy-glob"
+"Repository" = "https://github.com/vexyart/vexy-glob"
+
+[project.scripts]
+vg = "vexy_glob.__main__:main"
+
+[build-system]
+requires = ["maturin>=1.4,<2.0"]
+build-backend = "maturin"
+
+[tool.cibuildwheel]
+build = ["cp38-*", "cp39-*", "cp310-*", "cp311-*", "cp312-*"]
+skip = ["*-musllinux_i686", "*-win32", "pp*"]
+test-requires = "pytest"
+test-command = "pytest {project}/tests -v"
+
+[tool.cibuildwheel.linux]
+manylinux-x86_64-image = "manylinux2014"
+manylinux-i686-image = "manylinux2014"
+
+[tool.cibuildwheel.macos]
+archs = ["x86_64", "arm64", "universal2"]
+
+[tool.cibuildwheel.windows]
+archs = ["AMD64"]
+
+[tool.hatch.envs.default]
+dependencies = [
+  "pytest>=8.3.5",
+  "loguru>=0.7.3",
+  "maturin>=1.9.2",
+  "ruff>=0.1.0",
+]
+
+[tool.hatch.envs.default.scripts]
+build = "maturin develop"
+build-release = "maturin develop --release"
+test = "pytest tests/ -v"
+lint = "ruff check src/ vexy_glob/ tests/"
+format = "ruff format src/ vexy_glob/ tests/"
+check = "ruff check src/ vexy_glob/ tests/ && pytest tests/ -v"
+
+[tool.hatch.envs.test]
+template = "default"
+matrix = [{ python = ["3.8", "3.9", "3.10", "3.11", "3.12"] }]
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+module-name = "vexy_glob._vexy_glob"
+python-source = "."
+
+[tool.pytest.ini_options]
+python_classes = ["Test*"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py38"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]  # Line too long (handled by formatter)
+
