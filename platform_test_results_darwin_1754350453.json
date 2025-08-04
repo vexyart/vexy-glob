@@ -1,0 +1,74 @@
+{
+  "environment": {
+    "platform": "Darwin",
+    "platform_release": "24.5.0",
+    "platform_version": "Darwin Kernel Version 24.5.0: Tue Apr 22 19:53:26 PDT 2025; root:xnu-11417.121.6~2/RELEASE_X86_64",
+    "machine": "x86_64",
+    "processor": "i386",
+    "python_version": "3.12.8",
+    "python_implementation": "CPython",
+    "macos_version": [
+      "15.5",
+      [
+        "",
+        "",
+        ""
+      ],
+      "x86_64"
+    ],
+    "vexy_glob_version": "0.1.0",
+    "vexy_glob_path": "/Users/adam/Developer/vcs/github.vexyart/vexy-glob/vexy_glob/__init__.py"
+  },
+  "basic_tests": {
+    "basic_file_finding": true,
+    "pattern_matching": true,
+    "content_search": true,
+    "streaming": true,
+    "error_count": 0,
+    "errors": [],
+    "success_rate": 100.0
+  },
+  "platform_tests": {
+    "platform": "Darwin",
+    "available": true,
+    "test_results": null,
+    "error": null,
+    "success": true,
+    "stdout": "\ud83d\ude80 Running macOS Integration Tests for vexy_glob\n============================================================\nDetected macOS:  ()\nFile systems: apfs, devfs, autofs, APFS, HFS+\nSIP status: enabled\nXcode available: True\nTest root: /var/folders/05/clcynl0509ldxltl599hhhx40000gn/T/vexy_glob_macos_test_sp7jyhhw\n\ud83d\udd27 Testing APFS filesystem features...\n  Filesystem type: /\n  Not on APFS filesystem, skipping APFS-specific tests\nTest root: /var/folders/05/clcynl0509ldxltl599hhhx40000gn/T/vexy_glob_macos_test_1hk8ak5b\n\ud83d\udd27 Testing extended attributes...\n    Set extended attribute com.apple.metadata:kMDItemComment on file_with_xattr.txt\n    Warning: Could not set xattr com.apple.FinderInfo on file_with_finder_info.txt: Command '['xattr', '-wx', 'com.apple.FinderInfo', 'RklOREVSX0lORk9fREFUQQ==', '/var/folders/05/clcynl0509ldxltl599hhhx40000gn/T/vexy_glob_macos_test_1hk8ak5b/file_with_finder_info.txt']' returned non-zero exit status 64.\n    normal_file.txt has extended attributes: 14 attrs\n    file_with_xattr.txt has extended attributes: 17 attrs\n    file_with_finder_info.txt has extended attributes: 14 attrs\nTest root: /var/folders/05/clcynl0509ldxltl599hhhx40000gn/T/vexy_glob_macos_test_fyjwvpc3\n\ud83d\udd27 Testing macOS metadata handling...\n  Created 6 metadata files\n  Normal search: 1 files\n  Hidden search: 8 files\nTest root: /var/folders/05/clcynl0509ldxltl599hhhx40000gn/T/vexy_glob_macos_test_h2a4oduo\n\ud83d\udd27 Testing macOS-specific performance...\n    Created 1000 files + metadata\n    All files: 1011 found in 0.014s\n    No hidden: 1011 found in 0.014s\n    Performance: 73119 files/second\nTest root: /var/folders/05/clcynl0509ldxltl599hhhx40000gn/T/vexy_glob_macos_test_fq0stbtm\n\ud83d\udd27 Testing resource fork handling...\n    Created resource fork file for legacy_app.app\n    Created resource fork file for old_document.rtf\n    Created resource fork file for classic_file.txt\n    Found 4 total files\n    Found 4 files (excluding resource forks)\nTest root: /var/folders/05/clcynl0509ldxltl599hhhx40000gn/T/vexy_glob_macos_test_uter45_q\n\ud83d\udd27 Testing macOS security features...\n  SIP Status: enabled\n  Gatekeeper: unknown\n    Accessed /System/Library/Extensions: 708 entries\n    Accessed /usr/libexec: 384 entries\n    Accessed /System/Library/LaunchDaemons: 411 entries\nTest root: /var/folders/05/clcynl0509ldxltl599hhhx40000gn/T/vexy_glob_macos_test_m7rtivi3\n\ud83d\udd27 Testing Spotlight integration...\n    Created fake Spotlight index directory\n    Found 6 files including Spotlight metadata\nTest root: /var/folders/05/clcynl0509ldxltl599hhhx40000gn/T/vexy_glob_macos_test_7mk15poq\n\ud83d\udd27 Testing Time Machine integration...\n    Found 6 files (normal search)\n    Found 7 files (including hidden)\n    Found 0 .noindex files\n    Set Time Machine exclusion on test file\nTest root: /var/folders/05/clcynl0509ldxltl599hhhx40000gn/T/vexy_glob_macos_test_3rc9f_c6\n\ud83d\udd27 Testing macOS Unknown compatibility...\nTest root: /var/folders/05/clcynl0509ldxltl599hhhx40000gn/T/vexy_glob_macos_test_fmye7iyi\n\ud83d\udd27 Testing Xcode integration...\n  Xcode version: 16.4\n  Command line tools: False\n    Found 2 Swift files\n    Found 1 Xcode projects\n    Found 1 plist files\n    Total files including build artifacts: 16\n\n============================================================\n\ud83c\udfc1 macOS Integration Test Summary\n============================================================\nTests run: 10\nFailures: 0\nErrors: 0\nSkipped: 0\n\n\ud83c\udfaf Success Rate: 100.0%\n\u2705 macOS integration: EXCELLENT\n",
+    "stderr": "test_apfs_filesystem_features (__main__.MacOSIntegrationTest.test_apfs_filesystem_features)\nTest APFS filesystem features ... ok\ntest_extended_attributes (__main__.MacOSIntegrationTest.test_extended_attributes)\nTest extended attributes (xattr) handling ... ok\ntest_macos_metadata_handling (__main__.MacOSIntegrationTest.test_macos_metadata_handling)\nTest macOS metadata file handling ... ok\ntest_performance_on_macos (__main__.MacOSIntegrationTest.test_performance_on_macos)\nTest performance characteristics on macOS ... ok\ntest_resource_forks (__main__.MacOSIntegrationTest.test_resource_forks)\nTest resource fork handling (legacy) ... ok\ntest_security_features (__main__.MacOSIntegrationTest.test_security_features)\nTest System Integrity Protection and Gatekeeper integration ... ok\ntest_spotlight_integration (__main__.MacOSIntegrationTest.test_spotlight_integration)\nTest Spotlight integration ... ok\ntest_time_machine_integration (__main__.MacOSIntegrationTest.test_time_machine_integration)\nTest Time Machine integration ... ok\ntest_version_compatibility (__main__.MacOSIntegrationTest.test_version_compatibility)\nTest macOS version-specific features ... ok\ntest_xcode_integration (__main__.MacOSIntegrationTest.test_xcode_integration)\nTest Xcode and development tool integration ... ok\n\n----------------------------------------------------------------------\nRan 10 tests in 395.164s\n\nOK\n",
+    "returncode": 0
+  },
+  "performance_tests": {
+    "small_dataset": {
+      "files_created": 100,
+      "files_found": 100,
+      "find_time": 0.007102605071850121,
+      "find_rate": 14079.341169669106,
+      "search_results": 100,
+      "search_time": 0.0068430290557444096,
+      "search_rate": 14613.411573352094
+    },
+    "medium_dataset": {
+      "files_created": 1000,
+      "files_found": 1000,
+      "find_time": 0.00983441504649818,
+      "find_rate": 101683.72956316077,
+      "search_results": 1000,
+      "search_time": 0.022696256986819208,
+      "search_rate": 44060.1285304774
+    },
+    "large_dataset": {
+      "files_created": 5000,
+      "files_found": 5000,
+      "find_time": 0.02682410494890064,
+      "find_rate": 186399.5093042208,
+      "search_results": 5000,
+      "search_time": 0.08600668900180608,
+      "search_rate": 58135.013195252795
+    },
+    "error_count": 0,
+    "errors": []
+  },
+  "timestamp": 1754350453.0964239,
+  "test_duration": 400.92336106300354
+}

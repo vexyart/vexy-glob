@@ -5,7 +5,7 @@ use pyo3::exceptions::PyValueError;
 use pyo3::types::PyDict;
 use ignore::{WalkBuilder, WalkState, DirEntry};
 use globset::{GlobSet, GlobSetBuilder};
-use crossbeam_channel::{bounded, Receiver};
+use crossbeam_channel::Receiver;
 use std::path::Path;
 use std::sync::Arc;
 use std::fs::File;
@@ -15,10 +15,19 @@ use grep_searcher::{Searcher, Sink, SinkMatch};
 use grep_regex::{RegexMatcher, RegexMatcherBuilder};
 
 mod zero_copy_path;
+mod pattern_cache;
+mod simd_string;
+mod global_init;
 
 /// Main module definition for vexy_glob
 #[pymodule]
 fn _vexy_glob(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    // Perform global initialization to reduce cold start variance
+    global_init::ensure_global_init()
+        .map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(
+            format!("Failed to initialize vexy_glob: {}", e)
+        ))?;
+    
     m.add_function(wrap_pyfunction!(find, m)?)?;
     m.add_function(wrap_pyfunction!(search, m)?)?;
     m.add_class::<VexyGlobIterator>()?;
@@ -288,8 +297,8 @@ fn find(
     // Get optimal buffer configuration
     let buffer_config = BufferConfig::for_workload(false, sort.is_some(), threads);
     
-    // Create channel for results with optimal capacity
-    let (tx, rx) = bounded::<FindResult>(buffer_config.channel_capacity);
+    // Create channel for results with optimal capacity using global pool
+    let (tx, rx) = global_init::get_channel_pool().get_channel(buffer_config.channel_capacity);
     
     // Build the walker
     let mut builder = WalkBuilder::new(&paths[0]);
@@ -565,8 +574,8 @@ fn search(
     // Get optimal buffer configuration for content search
     let buffer_config = BufferConfig::for_workload(true, false, threads);
     
-    // Create channel for results with optimal capacity
-    let (tx, rx) = bounded::<FindResult>(buffer_config.channel_capacity);
+    // Create channel for results with optimal capacity using global pool
+    let (tx, rx) = global_init::get_channel_pool().get_channel(buffer_config.channel_capacity);
     
     // Build the walker
     let mut builder = WalkBuilder::new(&paths[0]);
@@ -742,28 +751,17 @@ enum PatternMatcher {
 }
 
 impl PatternMatcher {
-    /// Create a new pattern matcher, optimizing for literal patterns
+    /// Create a new pattern matcher using cached compilation, optimizing for literal patterns
     fn new(pattern: &str, case_sensitive: bool) -> Result<Self> {
-        if is_literal_pattern(pattern) {
+        if pattern_cache::is_literal_pattern(pattern) {
             Ok(PatternMatcher::Literal { 
                 pattern: pattern.to_string(), 
                 case_sensitive 
             })
         } else {
-            // Build glob pattern
-            // If pattern doesn't contain path separator, prepend **/ to match in any directory
-            let adjusted_pattern = if !pattern.contains('/') && !pattern.contains('\\') {
-                format!("**/{}", pattern)
-            } else {
-                pattern.to_string()
-            };
-            
-            let glob = globset::GlobBuilder::new(&adjusted_pattern)
-                .case_insensitive(!case_sensitive)
-                .build()?;
-            let mut builder = GlobSetBuilder::new();
-            builder.add(glob);
-            Ok(PatternMatcher::Glob(builder.build()?))
+            // Use cached pattern compilation for performance
+            let cached_entry = pattern_cache::PATTERN_CACHE.get_or_compile(pattern, case_sensitive)?;
+            Ok(PatternMatcher::Glob((*cached_entry.glob_set).clone()))
         }
     }
     
@@ -799,17 +797,17 @@ impl PatternMatcher {
     }
 }
 
-/// Check if a pattern contains glob special characters
-fn is_literal_pattern(pattern: &str) -> bool {
-    !pattern.chars().any(|c| matches!(c, '*' | '?' | '[' | ']' | '{' | '}'))
-}
 
-/// Build a GlobSet from patterns
+/// Build a GlobSet from patterns using cached compilation
 fn build_glob_set(patterns: &[String], case_sensitive: bool) -> Result<GlobSet> {
     let mut builder = GlobSetBuilder::new();
     
     for pattern in patterns {
-        // If pattern doesn't contain path separator, prepend **/ to match in any directory
+        // Get cached pattern compilation (warming the cache)
+        let _cached_entry = pattern_cache::PATTERN_CACHE.get_or_compile(pattern, case_sensitive)?;
+        
+        // Extract the first glob from the cached GlobSet and add it to our builder
+        // Since each cached entry contains a single pattern, we can rebuild it here
         let adjusted_pattern = if !pattern.contains('/') && !pattern.contains('\\') {
             format!("**/{}", pattern)
         } else {

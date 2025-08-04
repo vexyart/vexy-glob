@@ -1,0 +1,70 @@
+{
+  "environment": {
+    "platform": "Darwin",
+    "platform_release": "24.5.0",
+    "platform_version": "Darwin Kernel Version 24.5.0: Tue Apr 22 19:53:26 PDT 2025; root:xnu-11417.121.6~2/RELEASE_X86_64",
+    "machine": "x86_64",
+    "processor": "i386",
+    "python_version": "3.12.8",
+    "python_implementation": "CPython",
+    "macos_version": [
+      "15.5",
+      [
+        "",
+        "",
+        ""
+      ],
+      "x86_64"
+    ],
+    "vexy_glob_version": "0.1.0",
+    "vexy_glob_path": "/Users/adam/Developer/vcs/github.vexyart/vexy-glob/vexy_glob/__init__.py"
+  },
+  "basic_tests": {
+    "basic_file_finding": true,
+    "pattern_matching": true,
+    "content_search": true,
+    "streaming": true,
+    "error_count": 0,
+    "errors": [],
+    "success_rate": 100.0
+  },
+  "platform_tests": {
+    "platform": "Darwin",
+    "available": true,
+    "test_results": null,
+    "error": "macOS tests timed out"
+  },
+  "performance_tests": {
+    "small_dataset": {
+      "files_created": 100,
+      "files_found": 100,
+      "find_time": 0.018099406035616994,
+      "find_rate": 5525.04318667776,
+      "search_results": 100,
+      "search_time": 0.016724347951821983,
+      "search_rate": 5979.306355504628
+    },
+    "medium_dataset": {
+      "files_created": 1000,
+      "files_found": 1000,
+      "find_time": 0.015849236981011927,
+      "find_rate": 63094.52001998856,
+      "search_results": 1000,
+      "search_time": 0.05945430800784379,
+      "search_rate": 16819.639038908168
+    },
+    "large_dataset": {
+      "files_created": 5000,
+      "files_found": 5000,
+      "find_time": 0.05995980591978878,
+      "find_rate": 83389.19586712387,
+      "search_results": 5000,
+      "search_time": 0.29874623101204634,
+      "search_rate": 16736.612820391983
+    },
+    "error_count": 0,
+    "errors": []
+  },
+  "timestamp": 1754350004.68873,
+  "test_duration": 315.2436418533325
+}
