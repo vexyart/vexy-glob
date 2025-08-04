@@ -4,18 +4,8 @@
 
 ### Priority 1: Performance Optimization & Profiling
 
-- [x] **1.1 Profiling Infrastructure Setup** ✅
-  - [x] Install and configure cargo flamegraph for Rust hot path analysis ✅
+- [ ] **1.1 Remaining Profiling Tasks**
   - [ ] Set up Linux perf tools integration for system-level profiling
-  - [x] Create reproducible benchmark suite with consistent test datasets (small/medium/large directory structures) ✅
-  - [x] Establish baseline performance metrics for regression detection ✅
-  - [x] Document profiling methodology for future optimization work ✅
-
-- [x] **1.2 Critical Path Performance Analysis** ✅
-  - [x] Profile directory traversal under different filesystem types (ext4, NTFS, APFS) ✅
-  - [x] Analyze glob pattern compilation and matching performance characteristics ✅
-  - [x] Identify memory allocation hotspots using valgrind/jemalloc profiling ✅
-  - [x] Measure crossbeam channel overhead and buffer utilization patterns ✅
   - [ ] Profile regex compilation caching effectiveness in content search operations
 
 - [ ] **1.3 Hot Path Optimization Implementation**

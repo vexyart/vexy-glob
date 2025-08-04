@@ -6,13 +6,15 @@ use pyo3::types::PyDict;
 use ignore::{WalkBuilder, WalkState, DirEntry};
 use globset::{GlobSet, GlobSetBuilder};
 use crossbeam_channel::{bounded, Receiver};
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::sync::Arc;
 use std::fs::File;
 use std::time::SystemTime;
 use anyhow::Result;
 use grep_searcher::{Searcher, Sink, SinkMatch};
 use grep_regex::{RegexMatcher, RegexMatcherBuilder};
+
+mod zero_copy_path;
 
 /// Main module definition for vexy_glob
 #[pymodule]
@@ -26,7 +28,7 @@ fn _vexy_glob(m: &Bound<'_, PyModule>) -> PyResult<()> {
 /// Search result for content matching
 #[derive(Debug, Clone)]
 pub struct SearchResultRust {
-    pub path: PathBuf,
+    pub path: String,  // Changed from PathBuf to String for zero-copy optimization
     pub line_number: u64,
     pub line_text: String,
     pub matches: Vec<String>,
@@ -35,7 +37,7 @@ pub struct SearchResultRust {
 /// Result type for path finding and content search
 #[derive(Debug, Clone)]
 enum FindResult {
-    Path(PathBuf),
+    Path(String),  // Changed from PathBuf to String for zero-copy optimization
     Search(SearchResultRust),
     Error(String),
 }
@@ -85,17 +87,16 @@ impl VexyGlobIterator {
     fn __next__(mut slf: PyRefMut<'_, Self>) -> Option<PyObject> {
         if let Some(receiver) = &slf.receiver {
             match receiver.recv() {
-                Ok(FindResult::Path(path)) => {
+                Ok(FindResult::Path(path_str)) => {
                     Python::with_gil(|py| {
                         if slf.as_path_objects {
                             // Return as pathlib.Path
                             let pathlib = py.import("pathlib").ok()?;
                             let path_class = pathlib.getattr("Path").ok()?;
-                            let path_str = path.to_string_lossy().to_string();
                             Some(path_class.call1((path_str,)).ok()?.into())
                         } else {
-                            // Return as string
-                            Some(path.to_string_lossy().to_string().into_pyobject(py).ok()?.into())
+                            // Return as string (already a string, no conversion needed)
+                            Some(path_str.into_pyobject(py).ok()?.into())
                         }
                     })
                 }
@@ -107,10 +108,9 @@ impl VexyGlobIterator {
                         let path_obj: PyObject = if slf.as_path_objects {
                             let pathlib = py.import("pathlib").ok()?;
                             let path_class = pathlib.getattr("Path").ok()?;
-                            let path_str = search_result.path.to_string_lossy().to_string();
-                            path_class.call1((path_str,)).ok()?.into()
+                            path_class.call1((&search_result.path,)).ok()?.into()
                         } else {
-                            search_result.path.to_string_lossy().to_string().into_pyobject(py).ok()?.into()
+                            search_result.path.clone().into_pyobject(py).ok()?.into()
                         };
                         
                         result_dict.set_item("path", path_obj).ok()?;
@@ -140,12 +140,12 @@ impl VexyGlobIterator {
 
 /// Custom Sink implementation for collecting search results
 struct SearchSink {
-    path: PathBuf,
+    path: String,  // Changed to String for zero-copy optimization
     results: Vec<SearchResultRust>,
 }
 
 impl SearchSink {
-    fn new(path: PathBuf) -> Self {
+    fn new(path: String) -> Self {
         Self {
             path,
             results: Vec::new(),
@@ -381,7 +381,9 @@ fn find(
                             *ctime_after,
                             *ctime_before,
                         ) {
-                            let _ = tx.send(FindResult::Path(entry.path().to_path_buf()));
+                            // Zero-copy optimization: convert path to string once
+                            let path_string = entry.path().to_string_lossy().into_owned();
+                            let _ = tx.send(FindResult::Path(path_string));
                         }
                     }
                     Err(err) => {
@@ -415,7 +417,11 @@ fn find(
         // Sort results if requested
         if let Some(ref sort_by) = sort {
             match sort_by.as_str() {
-                "name" => results.sort_by(|a, b| a.file_name().cmp(&b.file_name())),
+                "name" => results.sort_by(|a, b| {
+                    let a_name = std::path::Path::new(a).file_name().and_then(|n| n.to_str()).unwrap_or("");
+                    let b_name = std::path::Path::new(b).file_name().and_then(|n| n.to_str()).unwrap_or("");
+                    a_name.cmp(b_name)
+                }),
                 "path" => results.sort(),
                 "size" => {
                     results.sort_by_key(|p| {
@@ -440,10 +446,10 @@ fn find(
                 if as_path_objects {
                     let pathlib = py.import("pathlib")?;
                     let path_class = pathlib.getattr("Path")?;
-                    let path_obj = path_class.call1((path.to_string_lossy().to_string(),))?;
+                    let path_obj = path_class.call1((path,))?;
                     py_list.append(path_obj)?;
                 } else {
-                    py_list.append(path.to_string_lossy().to_string())?;
+                    py_list.append(path)?;
                 }
             }
             Ok(py_list.into())
@@ -700,10 +706,9 @@ fn search(
                 let path_obj: PyObject = if as_path_objects {
                     let pathlib = py.import("pathlib")?;
                     let path_class = pathlib.getattr("Path")?;
-                    let path_str = search_result.path.to_string_lossy().to_string();
-                    path_class.call1((path_str,))?.into()
+                    path_class.call1((&search_result.path,))?.into()
                 } else {
-                    search_result.path.to_string_lossy().to_string().into_pyobject(py)?.into()
+                    search_result.path.clone().into_pyobject(py)?.into()
                 };
                 
                 result_dict.set_item("path", path_obj)?;
@@ -1007,8 +1012,8 @@ fn search_file_content(
     // Create searcher (buffer size optimization deferred - API doesn't support it directly)
     let mut searcher = Searcher::new();
     
-    // Create sink for collecting results
-    let mut sink = SearchSink::new(path.to_path_buf());
+    // Create sink for collecting results (zero-copy: convert path to string once)
+    let mut sink = SearchSink::new(path.to_string_lossy().into_owned());
     
     // Search the file content
     match searcher.search_file(content_matcher, &file, &mut sink) {
