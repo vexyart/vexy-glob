@@ -35,11 +35,19 @@ lto = true
 panic = "abort"
 codegen-units = 1
 
+[profile.bench]
+debug = true
+opt-level = 3
+
 [dev-dependencies]
 criterion = "0.5"
 tempfile = "3.8"
 
 [[bench]]
 name = "hot_paths"
+harness = false
+
+[[bench]]
+name = "comprehensive_benchmarks"
 harness = false
 

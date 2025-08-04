@@ -1,75 +1,104 @@
 # TODO.md - vexy_glob Implementation Tasks
 
-## 🚀 CURRENT PRIORITIES
+## 🚀 CURRENT PRIORITIES - Path to v2.0.0
 
-### Priority 1: Performance Optimizations
+### Priority 1: Performance Optimization & Profiling
 
-- [ ] **Hot Path Profiling & Optimization**
-  - Profile critical performance paths using cargo flamegraph and perf
-  - Identify bottlenecks in directory traversal and pattern matching
-  - Optimize memory allocations and reduce unnecessary string copies
-  - Implement SIMD optimizations where applicable
-  - Benchmark improvements against baseline performance metrics
-  - Target: Additional 20-30% performance improvement in hot paths
+- [ ] **1.1 Profiling Infrastructure Setup**
+  - Install and configure cargo flamegraph for Rust hot path analysis
+  - Set up Linux perf tools integration for system-level profiling
+  - Create reproducible benchmark suite with consistent test datasets (small/medium/large directory structures)
+  - Establish baseline performance metrics for regression detection
+  - Document profiling methodology for future optimization work
 
-### Priority 2: Platform Testing & Validation
+- [ ] **1.2 Critical Path Performance Analysis**
+  - Profile directory traversal under different filesystem types (ext4, NTFS, APFS)
+  - Analyze glob pattern compilation and matching performance characteristics
+  - Identify memory allocation hotspots using valgrind/jemalloc profiling
+  - Measure crossbeam channel overhead and buffer utilization patterns
+  - Profile regex compilation caching effectiveness in content search operations
 
-- [ ] **Windows Compatibility Testing**
-  - Test UNC paths (\\server\share) and drive letters (C:\)
-  - Verify handling of Windows path separators and case insensitivity
-  - Test with Windows-specific files (pagefile.sys, System Volume Information)
-  - Validate symlink and junction handling on NTFS
-  - Test with PowerShell and cmd.exe environments
+- [ ] **1.3 Hot Path Optimization Implementation**
+  - Implement zero-copy string operations for path handling where possible
+  - Optimize glob pattern pre-compilation and caching strategies
+  - Apply SIMD optimizations for string matching operations (investigate std::simd)
+  - Reduce heap allocations in traversal loops through object pooling/reuse
+  - Optimize channel buffer sizes based on empirical workload analysis
+  - **Success Criteria**: 20-30% performance improvement in identified hot paths
 
-- [ ] **Linux Distribution Testing**
-  - Test on Ubuntu LTS, CentOS/RHEL, Debian, Alpine Linux
-  - Verify different filesystem types (ext4, btrfs, xfs, zfs)
-  - Test with different locale settings and character encodings
-  - Validate handling of special files (/proc, /sys, /dev)
-  - Test with container environments (Docker, Podman)
+### Priority 2: Comprehensive Platform Testing & Validation
 
-- [ ] **macOS Ecosystem Testing**
-  - Test with .DS_Store, .Trashes, and Resource Forks
-  - Verify APFS and HFS+ filesystem compatibility
-  - Test with macOS-specific extended attributes and metadata
-  - Validate case-preservation behavior on case-insensitive filesystems
-  - Test with Time Machine and Spotlight exclusions
+- [ ] **2.1 Windows Ecosystem Comprehensive Testing**
+  - Test UNC paths (\\server\share\folder) with network drives and SharePoint mounts
+  - Verify Windows drive letters (C:\, D:\, mapped network drives) and path normalization
+  - Test case-insensitive NTFS behavior with mixed-case file/directory names
+  - Validate Windows reserved filenames (CON, PRN, AUX, COM1-COM9, LPT1-LPT9)
+  - Test NTFS junction points, hard links, and symbolic links (requires elevation)
+  - Verify Windows file attributes (hidden, system, readonly) and ACL permissions
+  - Test with PowerShell 5.1, PowerShell 7, cmd.exe, and Windows Terminal
+  - Validate WSL1/WSL2 integration and cross-filesystem operations
+  - Test with Windows Defender real-time scanning and exclusions
 
-- [ ] **Real-World Validation**
-  - Test against large codebases (Linux kernel, Chromium, LLVM)
-  - Benchmark vs fd and ripgrep on identical workloads
-  - Stress test with 1M+ file directories
-  - Memory profiling under extreme loads
-  - Signal handling and graceful shutdown testing
+- [ ] **2.2 Linux Distribution Matrix Validation**
+  - **Core Distributions**: Ubuntu 20.04/22.04 LTS, RHEL 8/9, Debian 11/12, Alpine 3.18+
+  - **Filesystem Testing**: ext4, btrfs (subvolumes), xfs, zfs, tmpfs, and network mounts
+  - **Character Encoding**: UTF-8, ISO-8859-1, GB2312, and locale-specific encodings
+  - **Special Filesystems**: /proc, /sys, /dev, /tmp with proper permission handling
+  - **Container Testing**: Docker, Podman, LXC with volume mounts and overlay filesystems
+  - **Package Manager Integration**: Test installation via pip, conda, and system packages
+  - **SELinux/AppArmor**: Validate behavior under mandatory access control systems
 
-### Priority 3: Production Release (v2.0.0)
+- [ ] **2.3 macOS Platform Integration Testing**
+  - **Filesystem Features**: APFS (case-sensitive/insensitive), HFS+, and external drives
+  - **macOS Metadata**: .DS_Store, .fseventsd, .Spotlight-V100, .Trashes handling
+  - **Extended Attributes**: Test xattr preservation and com.apple.* attribute handling
+  - **Resource Forks**: Validate legacy resource fork detection and proper skipping
+  - **System Integration**: Time Machine exclusions, Spotlight indexing interference
+  - **Security**: Test with System Integrity Protection (SIP) and Gatekeeper
+  - **Versions**: macOS 11 (Big Sur) through macOS 14 (Sonoma) compatibility
 
-- [ ] **Pre-Release Validation**
-  - Execute full CI/CD test matrix (Python 3.8-3.12, Linux/macOS/Windows)
-  - Manual verification on clean VM environments
-  - Installation testing from wheels on fresh systems
-  - Validation of all README.md examples and cookbook recipes
-  - Performance regression testing against v1.0.6 baseline
+- [ ] **2.4 Large-Scale Real-World Performance Validation**
+  - **Massive Codebases**: Linux kernel (~70K files), Chromium (~300K files), LLVM (~50K files)
+  - **Competitive Benchmarking**: Direct comparison with `fd` and `ripgrep` on identical datasets
+  - **Stress Testing**: 1M+ file directories with deep nesting (>20 levels)
+  - **Memory Profiling**: Valgrind, heaptrack analysis under extreme loads (10M+ files)
+  - **Signal Handling**: SIGINT, SIGTERM graceful shutdown with resource cleanup
+  - **Resource Limits**: Test ulimit scenarios (open files, memory, CPU time)
+  - **Network Filesystems**: NFS, SMB/CIFS, sshfs performance characteristics
 
-- [ ] **Release Engineering**
-  - Update version to 2.0.0 in pyproject.toml (semantic versioning for new features)
-  - Generate comprehensive release notes highlighting performance improvements
-  - Build and test wheels for all supported platforms (Linux x86_64, macOS Intel/ARM, Windows x64)
-  - Upload to Test PyPI and validate installation/functionality
-  - Create staging environment for final validation
+### Priority 3: Production Release Engineering (v2.0.0)
 
-- [ ] **Launch & Distribution**
-  - Publish stable release to PyPI with all platform wheels
-  - Create GitHub release with detailed changelog and downloadable artifacts
-  - Update project documentation and badges with new version
-  - Announce on Python Package Index, Hacker News, Reddit r/Python
-  - Submit to Python Weekly newsletter and relevant community channels
+- [ ] **3.1 Pre-Release Quality Assurance**
+  - **CI/CD Validation**: Execute full matrix testing (Python 3.8-3.12 × Linux/macOS/Windows)
+  - **Clean Environment Testing**: Manual validation on fresh VMs (Ubuntu 22.04, Windows 11, macOS Ventura)
+  - **Installation Verification**: Test pip install from wheels without development dependencies
+  - **Documentation Validation**: Execute every code example in README.md and verify output
+  - **Performance Regression**: Automated benchmarking against v1.0.7 baseline with acceptable thresholds
+  - **Security Audit**: Run cargo audit, bandit (Python), and dependency vulnerability scanning
+  - **Code Coverage**: Maintain >95% test coverage with coverage.py and tarpaulin
 
-- [ ] **Post-Release Monitoring**
-  - Monitor PyPI download statistics and user feedback
-  - Set up issue templates for bug reports and feature requests  
-  - Establish maintenance schedule for dependency updates
-  - Plan roadmap for future enhancements based on user adoption
+- [ ] **3.2 Release Engineering & Version Management**
+  - **Semantic Versioning**: Update to 2.0.0 (breaking changes in performance characteristics)
+  - **Version Synchronization**: Run sync_version.py to align Cargo.toml with git tags
+  - **Release Notes**: Generate comprehensive changelog with performance benchmarks
+  - **Wheel Building**: Build manylinux_2_17 (x86_64), macOS (Intel/ARM universal), Windows (x64)
+  - **Source Distribution**: Create sdist with complete build instructions and vendored deps
+  - **Test PyPI Staging**: Upload release candidate and validate installation across platforms
+
+- [ ] **3.3 Production Launch & Distribution**
+  - **PyPI Release**: Publish stable 2.0.0 with all platform wheels and comprehensive metadata
+  - **GitHub Release**: Create tagged release with artifacts, changelog, and migration guide
+  - **Documentation Updates**: Update shields.io badges, version numbers, and compatibility matrix
+  - **Community Announcement**: Coordinate releases across Python Weekly, Hacker News, Reddit r/Python
+  - **Professional Networks**: Share on LinkedIn, Twitter/X with performance benchmarks
+
+- [ ] **3.4 Post-Release Operations & Monitoring**
+  - **Analytics Setup**: Monitor PyPI download stats, GitHub star/fork growth
+  - **Issue Management**: Deploy issue templates (bug-report.yml, feature-request.yml)
+  - **Maintenance Planning**: Establish Dependabot schedule, security update process
+  - **Community Building**: Create CONTRIBUTING.md, CODE_OF_CONDUCT.md, maintainer guidelines
+  - **Roadmap Planning**: Analyze user feedback for v3.0.0 features (async support, watch mode)
+  - **Performance Monitoring**: Set up continuous benchmarking in CI for regression detection
 
 ## Notes
 

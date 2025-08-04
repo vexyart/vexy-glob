@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Preparing for v2.0.0 performance and platform testing release
+
+### Changed
+- N/A
+
+### Fixed
+- N/A
+
+## [1.0.7] - 2024-08-03
+
+### Added
 - **Smart-case Matching Optimization** ✅
   - Implemented intelligent case sensitivity based on pattern content
   - Patterns with uppercase letters are automatically case-sensitive
@@ -41,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Useful for avoiding network mounts and external drives during traversal
   - Works with both `find()` and `search()` functions
   - Defaults to False to maintain backward compatibility
-- **Comprehensive Documentation** (Issue #102) ✅
+- **Comprehensive Documentation** ✅
   - Expanded README.md from 419 to 1464 lines (3.5x increase)
   - Added architecture diagram showing Rust/Python integration
   - Created complete API reference with all function parameters and types
