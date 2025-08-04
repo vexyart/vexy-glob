@@ -75,3 +75,10 @@ vexy_glob/_version.py
 test_gitignore/test_gitignore/
 
 _version.py
+
+# Profiling artifacts
+cargo-flamegraph.trace/
+flamegraph.svg
+*.trace
+target/profiling/
+target/fs_test_*/
