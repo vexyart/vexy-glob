@@ -80,8 +80,11 @@ impl ChannelPool {
 
 /// Channel pool statistics
 pub struct ChannelPoolStats {
+    #[allow(dead_code)] // Used for performance monitoring and debugging
     pub small_channels: usize,
+    #[allow(dead_code)] // Used for performance monitoring and debugging
     pub medium_channels: usize,
+    #[allow(dead_code)] // Used for performance monitoring and debugging
     pub large_channels: usize,
 }
 
@@ -113,6 +116,7 @@ pub fn get_channel_pool() -> &'static ChannelPool {
 
 /// Performance metrics for global initialization
 #[derive(Debug)]
+#[allow(dead_code)] // Used for performance monitoring and debugging
 pub struct InitMetrics {
     pub thread_pool_ready: bool,
     pub pattern_cache_size: usize,
@@ -120,6 +124,7 @@ pub struct InitMetrics {
 }
 
 /// Get current initialization metrics
+#[allow(dead_code)] // Used for performance monitoring and debugging
 pub fn get_init_metrics() -> InitMetrics {
     let pattern_stats = crate::pattern_cache::PATTERN_CACHE.stats();
     let channel_stats = CHANNEL_POOL.stats();

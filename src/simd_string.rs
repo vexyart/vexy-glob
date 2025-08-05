@@ -4,6 +4,10 @@
 //!
 //! This module provides optimized string comparison functions. 
 //! Future work will include SIMD optimizations for even better performance.
+//!
+//! Note: This module contains SIMD optimization infrastructure prepared for v3.0.0
+//! All functions are intentionally unused in the current version
+#![allow(dead_code)]
 
 /// High-performance string comparison operations
 pub struct FastStringOps;

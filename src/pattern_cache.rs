@@ -35,9 +35,12 @@ const COMMON_PATTERNS: &[&str] = &[
 /// Cache entry containing compiled pattern
 #[derive(Clone)]
 pub struct CacheEntry {
+    #[allow(dead_code)] // Used for debugging and future enhancements
     pub pattern: String,
     pub glob_set: Arc<GlobSet>,
+    #[allow(dead_code)] // Used for optimization decisions in future versions
     pub is_literal: bool,
+    #[allow(dead_code)] // Used for smart case matching in future versions
     pub case_sensitive: bool,
 }
 
@@ -154,8 +157,11 @@ impl PatternCache {
 
 /// Cache statistics
 pub struct CacheStats {
+    #[allow(dead_code)] // Used for performance monitoring and debugging
     pub size: usize,
+    #[allow(dead_code)] // Used for performance monitoring and debugging
     pub capacity: usize,
+    #[allow(dead_code)] // Used for performance monitoring and debugging
     pub precompiled_patterns: usize,
 }
 

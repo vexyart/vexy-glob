@@ -193,7 +193,7 @@ Project Structure:
 │   │       │   └── 📁 s-h9t098e2dd-0xi4928-c4pk1st2nb0tgj2nuhcp109mq
 │   │       │       └── ... (depth limit reached)
 │   │       ├── 📁 vexy_glob-14f1f4y44bavz
-│   │       │   └── 📁 s-h9v408i89j-0h2tx7k-dzti9zbvvis5rh936xgyblq3j
+│   │       │   └── 📁 s-h9v5l5fusa-1abh6jp-dzti9zbvvis5rh936xgyblq3j
 │   │       │       └── ... (depth limit reached)
 │   │       ├── 📁 vexy_glob-173gufp31mci0
 │   │       │   └── 📁 s-h9u0321sdc-0doz7bi-5fq99idvi4las21hdgv9cgvo2
@@ -213,7 +213,7 @@ Project Structure:
 │   │       │   └── 📁 s-h9t05ab46q-02rswlq-1xx6sifycg0wcmewh2c946qm9
 │   │       │       └── ... (depth limit reached)
 │   │       ├── 📁 vexy_glob-20k5nke5qjrq1
-│   │       │   └── 📁 s-h9v408ib91-1f5fou5-0zyft57dasolbvddpq7w5n4ta
+│   │       │   └── 📁 s-h9v5l5ft6o-0uu00ai-0zyft57dasolbvddpq7w5n4ta
 │   │       │       └── ... (depth limit reached)
 │   │       ├── 📁 vexy_glob-20kbbi2cb3k0s
 │   │       │   ├── 📁 s-h9uw743gfg-1wvpyph-bqqh6nhgpylxvvgr2hibs7zsr
@@ -6918,8 +6918,11 @@ impl ChannelPool {
 
 /// Channel pool statistics
 pub struct ChannelPoolStats {
+    #[allow(dead_code)] // Used for performance monitoring and debugging
     pub small_channels: usize,
+    #[allow(dead_code)] // Used for performance monitoring and debugging
     pub medium_channels: usize,
+    #[allow(dead_code)] // Used for performance monitoring and debugging
     pub large_channels: usize,
 }
 
@@ -6951,6 +6954,7 @@ pub fn get_channel_pool() -> &'static ChannelPool {
 
 /// Performance metrics for global initialization
 #[derive(Debug)]
+#[allow(dead_code)] // Used for performance monitoring and debugging
 pub struct InitMetrics {
     pub thread_pool_ready: bool,
     pub pattern_cache_size: usize,
@@ -6958,6 +6962,7 @@ pub struct InitMetrics {
 }
 
 /// Get current initialization metrics
+#[allow(dead_code)] // Used for performance monitoring and debugging
 pub fn get_init_metrics() -> InitMetrics {
     let pattern_stats = crate::pattern_cache::PATTERN_CACHE.stats();
     let channel_stats = CHANNEL_POOL.stats();
@@ -7066,9 +7071,12 @@ const COMMON_PATTERNS: &[&str] = &[
 /// Cache entry containing compiled pattern
 #[derive(Clone)]
 pub struct CacheEntry {
+    #[allow(dead_code)] // Used for debugging and future enhancements
     pub pattern: String,
     pub glob_set: Arc<GlobSet>,
+    #[allow(dead_code)] // Used for optimization decisions in future versions
     pub is_literal: bool,
+    #[allow(dead_code)] // Used for smart case matching in future versions
     pub case_sensitive: bool,
 }
 
@@ -7185,8 +7193,11 @@ impl PatternCache {
 
 /// Cache statistics
 pub struct CacheStats {
+    #[allow(dead_code)] // Used for performance monitoring and debugging
     pub size: usize,
+    #[allow(dead_code)] // Used for performance monitoring and debugging
     pub capacity: usize,
+    #[allow(dead_code)] // Used for performance monitoring and debugging
     pub precompiled_patterns: usize,
 }
 

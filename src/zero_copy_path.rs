@@ -3,6 +3,10 @@
 //!
 //! This module provides optimized path handling to reduce allocations
 //! during file traversal and result collection.
+//!
+//! Note: This module contains optimization infrastructure prepared for v3.0.0
+//! All structures are intentionally unused in the current version
+#![allow(dead_code)]
 
 use std::borrow::Cow;
 use std::path::{Path, PathBuf};
