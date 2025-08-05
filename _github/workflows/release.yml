@@ -1,0 +1,40 @@
+# this_file: .github/workflows/release.yml
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Extract version from tag
+      id: version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+    
+    - name: Extract changelog for version
+      id: changelog
+      run: |
+        # Extract the changelog section for this version
+        awk '/^## \['${{ steps.version.outputs.VERSION }}'\]/{flag=1; next} /^## \[/{flag=0} flag' CHANGELOG.md > release_notes.md || echo "No changelog found for version ${{ steps.version.outputs.VERSION }}" > release_notes.md
+        echo "Release notes:"
+        cat release_notes.md
+    
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ steps.version.outputs.VERSION }}
+        body_path: release_notes.md
+        draft: false
+        prerelease: ${{ contains(github.ref, 'rc') || contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}

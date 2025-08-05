@@ -1,0 +1,50 @@
+# this_file: .github/workflows/coverage.yml
+name: Code Coverage
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: llvm-tools-preview
+
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install maturin pytest pytest-cov
+
+      - name: Build extension
+        run: maturin develop
+
+      - name: Generate Rust coverage
+        run: cargo llvm-cov --all-features --workspace --lcov --output-path rust-lcov.info
+
+      - name: Generate Python coverage
+        run: pytest tests/ --cov=vexy_glob --cov-report=lcov:python-lcov.info
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./rust-lcov.info,./python-lcov.info
+          flags: unittests
+          name: vexy_glob-coverage
+          fail_ci_if_error: false
