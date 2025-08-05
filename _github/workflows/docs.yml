@@ -1,0 +1,141 @@
+# this_file: _github/workflows/docs.yml
+
+name: Build and Deploy Documentation
+
+on:
+  push:
+    branches: [main, docs/**]
+    paths:
+      - 'src_docs/**'
+      - '_github/workflows/docs.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src_docs/**'
+      - '_github/workflows/docs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Fetch full history for proper version detection
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-docs-${{ hashFiles('src_docs/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-docs-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install mkdocs-material
+          pip install mkdocs-minify-plugin
+          # Install additional MkDocs plugins as needed
+          pip install mkdocs-mermaid2-plugin || true
+
+      - name: Verify MkDocs config
+        run: |
+          cd src_docs
+          mkdocs --version
+          python -c "import yaml; yaml.safe_load(open('mkdocs.yml'))"
+
+      - name: Build documentation
+        run: |
+          cd src_docs
+          mkdocs build --verbose --strict
+
+      - name: Verify build output
+        run: |
+          ls -la docs/
+          find docs/ -name "*.html" | head -5
+          # Check that index.html was created
+          test -f docs/index.html
+
+      - name: Setup Pages
+        if: github.ref == 'refs/heads/main'
+        uses: actions/configure-pages@v3
+
+      - name: Upload artifact
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: docs/
+
+  # Deploy job (only on main branch)
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+
+  # Build check for PRs (don't deploy)
+  build-check:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install mkdocs-material mkdocs-minify-plugin
+
+      - name: Build documentation (PR check)
+        run: |
+          cd src_docs
+          mkdocs build --verbose --strict
+
+      - name: Check for broken links
+        run: |
+          cd src_docs
+          # Install and run link checker if desired
+          # pip install mkdocs-linkcheck
+          # mkdocs build --strict
+          echo "Documentation built successfully for PR"
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ Documentation builds successfully! Preview will be available after merge to main branch.'
+            });

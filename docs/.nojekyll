@@ -1,0 +1,2 @@
+# This file tells GitHub Pages not to run Jekyll processing on the docs folder
+# vexy_glob documentation is built with MkDocs Material, not Jekyll

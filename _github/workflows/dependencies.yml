@@ -1,0 +1,38 @@
+# this_file: .github/workflows/dependencies.yml
+name: Update Dependencies
+
+on:
+  schedule:
+    # Run at 2 AM UTC every Monday
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update-rust-dependencies:
+    name: Update Rust Dependencies
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Rust
+      uses: dtolnay/rust-toolchain@stable
+    
+    - name: Update Cargo.lock
+      run: |
+        cargo update
+        cargo tree
+    
+    - name: Run tests
+      run: cargo test
+    
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v7
+      with:
+        commit-message: "chore: update Rust dependencies"
+        title: "chore: update Rust dependencies"
+        body: |
+          This PR updates the Rust dependencies in Cargo.lock.
+          
+          Please review the changes and ensure all tests pass before merging.
+        branch: update-rust-dependencies
+        delete-branch: true
