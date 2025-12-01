@@ -28,7 +28,7 @@ pyo3 = { version = "0.25", features = ["abi3-py38", "extension-module"] }
 rayon = "1.8"
 regex = "1.10"
 walkdir = "2.4"
-wide = "0.7"
+wide = "1.0"
 
 [profile.release]
 opt-level = 3
