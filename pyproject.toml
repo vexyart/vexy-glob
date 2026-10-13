@@ -30,15 +30,19 @@ dependencies = [
 ]
 
 [project.urls]
-"Bug Tracker" = "https://github.com/vexyart/vexy-glob/issues"
+"Documentation" = "https://vexy.dev/vexy-glob/"
 "Homepage" = "https://github.com/vexyart/vexy-glob"
 "Repository" = "https://github.com/vexyart/vexy-glob"
+"Issues" = "https://github.com/vexyart/vexy-glob/issues"
 
 [project.scripts]
 vg = "vexy_glob.__main__:main"
 
+# Maturin builds the Rust extension and reads the package version from
+# Cargo.toml (`dynamic = ["version"]` above). publish.sh writes the release
+# version into Cargo.toml before tagging, so the tag and Cargo.toml agree.
 [build-system]
-requires = ["maturin>=1.9.2", "setuptools-scm>=8.0"]
+requires = ["maturin>=1.9.2,<2"]
 build-backend = "maturin"
 
 [tool.cibuildwheel]
@@ -56,11 +60,6 @@ archs = ["x86_64", "arm64", "universal2"]
 
 [tool.cibuildwheel.windows]
 archs = ["AMD64"]
-
-[tool.setuptools_scm]
-version_file = "_version.py"
-version_scheme = "no-guess-dev"
-local_scheme = "no-local-version"
 
 [tool.hatch.envs.default]
 dependencies = [
@@ -87,6 +86,39 @@ features = ["pyo3/extension-module"]
 module-name = "vexy_glob._vexy_glob"
 python-source = "."
 strip = true
+# Keep the sdist to what `cargo build` and the Python package need.
+exclude = [
+  { path = ".github/**/*", format = "sdist" },
+  { path = "_github/**/*", format = "sdist" },
+  { path = "docs/**/*", format = "sdist" },
+  { path = "src_docs/**/*", format = "sdist" },
+  { path = "scripts/**/*", format = "sdist" },
+  { path = "examples/**/*", format = "sdist" },
+  { path = "test_gitignore/**/*", format = "sdist" },
+  { path = "benchmark_*.py", format = "sdist" },
+  { path = "compare_with_fd_large.py", format = "sdist" },
+  { path = "debug_*.py", format = "sdist" },
+  { path = "diagnose_variance.py", format = "sdist" },
+  { path = "isolate_content_issue.py", format = "sdist" },
+  { path = "profile_*.py", format = "sdist" },
+  { path = "sync_version.py", format = "sdist" },
+  { path = "test_cold_start_fix.py", format = "sdist" },
+  { path = "test_content_search_performance.py", format = "sdist" },
+  { path = "test_large_scale.py", format = "sdist" },
+  { path = "*.sh", format = "sdist" },
+  { path = "*.txt", format = "sdist" },
+  { path = "*.json", format = "sdist" },
+  { path = "uv.lock", format = "sdist" },
+  { path = ".cursorrules", format = "sdist" },
+  { path = "AGENTS.md", format = "sdist" },
+  { path = "CLAUDE.md", format = "sdist" },
+  { path = "GEMINI.md", format = "sdist" },
+  { path = "PLAN.md", format = "sdist" },
+  { path = "TODO.md", format = "sdist" },
+  { path = "WORK.md", format = "sdist" },
+  { path = "*_ANALYSIS.md", format = "sdist" },
+  { path = "PERFORMANCE_VS_TOOLS.md", format = "sdist" },
+]
 
 [tool.pytest.ini_options]
 python_classes = ["Test*"]

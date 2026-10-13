@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- `find(..., as_list=True)`, `find(..., sort=...)`, `glob()` and `search(..., as_list=True)` no longer hang when the result count exceeds the bounded channel capacity (about 1,000 paths or 500 lines). The list path now drains the channel before joining the walker thread.
+
+### Changed
+- Documentation moved to `src_docs/md/` and is published at https://vexy.dev/vexy-glob/.
+- `release.yml` builds multi-platform wheels and the sdist on `v*` tags; `publish.sh` bumps `Cargo.toml` to the next tag before `gitnextver`.
+
 ### Added
 - **Regex Cache Effectiveness Profiling**
   - Created profile_regex_cache.py to measure pattern caching benefits

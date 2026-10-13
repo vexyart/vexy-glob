@@ -411,17 +411,18 @@ fn find(
             as_path_objects,
         })?.into())
     } else {
-        // Collect all results into a list
-        py.allow_threads(|| {
-            walker_thread.join().unwrap();
-        });
-        
-        let mut results = Vec::new();
-        while let Ok(result) = rx.recv() {
-            if let FindResult::Path(path) = result {
-                results.push(path);
+        // Collect all results into a list. Drain the channel before joining the
+        // walker: the channel is bounded, so joining first deadlocks once it fills.
+        let mut results = py.allow_threads(|| {
+            let mut results = Vec::new();
+            while let Ok(result) = rx.recv() {
+                if let FindResult::Path(path) = result {
+                    results.push(path);
+                }
             }
-        }
+            walker_thread.join().unwrap();
+            results
+        });
         
         // Sort results if requested
         if let Some(ref sort_by) = sort {
@@ -694,17 +695,18 @@ fn search(
             as_path_objects,
         })?.into())
     } else {
-        // Collect all results into a list
-        py.allow_threads(|| {
-            walker_thread.join().unwrap();
-        });
-        
-        let mut results = Vec::new();
-        while let Ok(result) = rx.recv() {
-            if let FindResult::Search(search_result) = result {
-                results.push(search_result);
+        // Collect all results into a list. Drain the channel before joining the
+        // walker: the channel is bounded, so joining first deadlocks once it fills.
+        let results = py.allow_threads(|| {
+            let mut results = Vec::new();
+            while let Ok(result) = rx.recv() {
+                if let FindResult::Search(search_result) = result {
+                    results.push(search_result);
+                }
             }
-        }
+            walker_thread.join().unwrap();
+            results
+        });
         
         // Convert to Python list
         Python::with_gil(|py| {

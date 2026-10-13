@@ -2,6 +2,8 @@
 
 [![PyPI version](https://badge.fury.io/py/vexy_glob.svg)](https://badge.fury.io/py/vexy_glob) [![CI](https://github.com/vexyart/vexy-glob/actions/workflows/ci.yml/badge.svg)](https://github.com/vexyart/vexy-glob/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/vexyart/vexy-glob/branch/main/graph/badge.svg)](https://codecov.io/gh/vexyart/vexy-glob)
 
+**Documentation:** https://vexy.dev/vexy-glob/
+
 **`vexy_glob`** is a high-performance Python extension for file system traversal and content searching, built with Rust. It provides a faster and more feature-rich alternative to Python's built-in `glob` (up to 6x faster) and `pathlib` (up to 12x faster) modules.
 
 ## TL;DR

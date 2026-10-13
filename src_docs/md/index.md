@@ -1,118 +1,76 @@
----
-# this_file: src_docs/md/index.md
-title: vexy_glob Documentation
----
+# vexy-glob
 
-# vexy_glob - Path Accelerated Finding in Rust
+`vexy-glob` finds files and searches their contents from Python. The work
+happens in a Rust extension module built on the `ignore` crate (the directory
+walker behind `fd`) and the `grep-searcher` crate (the search engine behind
+`ripgrep`). Python receives the matching paths as they are found, through an
+iterator, so the first results arrive before the walk finishes.
 
-[![PyPI version](https://badge.fury.io/py/vexy_glob.svg)](https://badge.fury.io/py/vexy_glob) [![CI](https://github.com/vexyart/vexy-glob/actions/workflows/ci.yml/badge.svg)](https://github.com/vexyart/vexy-glob/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/vexyart/vexy-glob/branch/main/graph/badge.svg)](https://codecov.io/gh/vexyart/vexy-glob)
+The import name is `vexy_glob`. The PyPI package name is `vexy-glob`. The
+command-line tool is `vg`.
 
-**vexy_glob** is a high-performance Python extension for file system traversal and content searching, built with Rust. It provides a faster and more feature-rich alternative to Python's built-in `glob` (up to 6x faster) and `pathlib` (up to 12x faster) modules.
+## What it does
 
-## TL;DR
+You give it a glob pattern, a starting directory and optional filters. It walks
+the directory tree on several threads, skips what `.gitignore` and hidden-file
+rules exclude, applies your filters, and yields each path that passes.
 
-**Quick Install:**
-```bash
-pip install vexy_glob
-```
-
-**Quick Usage:**
 ```python
 import vexy_glob
 
-# Find all Python files
-for path in vexy_glob.find("**/*.py"):
+for path in vexy_glob.find("*.py", root="src"):
     print(path)
-
-# Search content within files
-for match in vexy_glob.find("**/*.py", content="import asyncio"):
-    print(f"{match.path}:{match.line_number}: {match.line_text}")
 ```
 
-**Key Benefits:**
-- 🚀 10-100x faster than standard Python file operations
-- ⚡ Streaming results - get first results in milliseconds
-- 💾 Constant memory usage regardless of file count
-- 🔥 Parallel execution using all CPU cores
-- 🔍 Built-in content search with regex support
-- 🎯 Rich filtering by size, time, type, and custom patterns
-- 🧠 Smart defaults - respects .gitignore automatically
+With a project that contains `src/a.py` and `src/sub/b.py`, this prints:
 
-## Documentation Table of Contents
-
-This documentation is organized into 9 comprehensive chapters covering all aspects of vexy_glob:
-
-### Getting Started
-- **[Chapter 1: Introduction and Overview](chapter1.md)** - What is vexy_glob, architecture, and key features
-- **[Chapter 2: Installation and Setup](chapter2.md)** - Installation methods, system requirements, and first steps
-
-### User Guide  
-- **[Chapter 3: Basic Usage and API Reference](chapter3.md)** - Core functions, basic patterns, and essential examples
-- **[Chapter 4: Advanced Features and Configuration](chapter4.md)** - Complex filtering, performance tuning, and advanced options
-- **[Chapter 5: Performance Optimization and Benchmarks](chapter5.md)** - Performance analysis, benchmarks, and optimization strategies
-- **[Chapter 6: Content Search and Filtering](chapter6.md)** - Regex content search, filtering options, and search patterns
-
-### Examples & Integration
-- **[Chapter 7: Integration and Examples](chapter7.md)** - Real-world examples, cookbook recipes, and integration patterns
-
-### Advanced Topics
-- **[Chapter 8: Troubleshooting and Best Practices](chapter8.md)** - Common issues, debugging, and best practices
-- **[Chapter 9: Development and Contributing](chapter9.md)** - Development setup, building from source, and contributing
-
-## What Makes vexy_glob Special?
-
-vexy_glob combines the best of both worlds: the performance of Rust with the convenience of Python. Built on top of battle-tested Rust crates used by tools like `fd` and `ripgrep`, it delivers exceptional performance while maintaining a simple, Pythonic API.
-
-### Architecture Overview
-
-```
-┌─────────────────────┐
-│   Python API Layer  │  ← Your Python code calls vexy_glob.find()
-├─────────────────────┤
-│    PyO3 Bindings    │  ← Zero-copy conversions between Python/Rust
-├─────────────────────┤
-│  Rust Core Engine   │  ← GIL released for true parallelism
-│  ┌───────────────┐  │
-│  │ ignore crate  │  │  ← Parallel directory traversal
-│  │ (from fd)     │  │     Respects .gitignore files
-│  └───────────────┘  │
-│  ┌───────────────┐  │
-│  │ grep-searcher │  │  ← High-speed content search
-│  │ (from ripgrep)│  │     SIMD-accelerated regex
-│  └───────────────┘  │
-├─────────────────────┤
-│ Streaming Channel   │  ← Results yielded as found
-│ (crossbeam-channel) │     No memory accumulation
-└─────────────────────┘
+```text
+src/a.py
+src/sub/b.py
 ```
 
-## Quick Feature Comparison
+The order can differ from run to run, because several threads walk the tree at
+once. Pass `sort="path"` when you need a stable order.
 
-| Feature | `glob.glob()` | `pathlib` | `vexy_glob` |
-|---------|---------------|-----------|-------------|
-| Pattern matching | ✅ Basic | ✅ Basic | ✅ Advanced |
-| Recursive search | ✅ Slow | ✅ Slow | ✅ Fast |
-| Streaming results | ❌ | ❌ | ✅ |
-| Content search | ❌ | ❌ | ✅ |
-| .gitignore respect | ❌ | ❌ | ✅ |
-| Parallel execution | ❌ | ❌ | ✅ |
-| Rich filtering | ❌ | ❌ | ✅ |
-| Memory efficiency | ❌ | ❌ | ✅ |
+Add a regular expression with `content=` (or call `search()`) and the tool reads
+each matching file and yields one dictionary per matching line:
 
-## Ready to Get Started?
+```python
+for hit in vexy_glob.search("TODO", "*.py", root="src"):
+    print(f"{hit['path']}:{hit['line_number']}:{hit['line_text'].rstrip()}")
+```
 
-Choose your path:
+```text
+src/sub/b.py:1:TODO x
+```
 
-- **New to vexy_glob?** Start with [Chapter 1: Introduction and Overview](chapter1.md)
-- **Want to install quickly?** Jump to [Chapter 2: Installation and Setup](chapter2.md)
-- **Ready to code?** Go straight to [Chapter 3: Basic Usage and API Reference](chapter3.md)
-- **Need specific examples?** Check out [Chapter 7: Integration and Examples](chapter7.md)
-- **Having issues?** Visit [Chapter 8: Troubleshooting and Best Practices](chapter8.md)
+## Main features
 
----
+- **Streaming results.** `find()` returns an iterator by default. Pass
+  `as_list=True` to get a list.
+- **Ignore rules.** `.gitignore`, `.ignore`, `.git/info/exclude` and a root
+  `.fdignore` file are honoured unless you pass `ignore_git=True`.
+- **Filters.** File type, extension, exclude patterns, size, modification time,
+  access time, creation time and depth.
+- **Smart case.** A pattern without uppercase letters matches case-insensitively.
+  A pattern with an uppercase letter matches case-sensitively.
+- **Content search.** Regular expressions in Rust `regex` syntax, run only on
+  files that pass the path filters.
+- **`glob` replacements.** `vexy_glob.glob()` and `vexy_glob.iglob()` accept the
+  common arguments of `glob.glob()` and `glob.iglob()`.
+- **CLI.** `vg find` and `vg search` expose the same engine in the terminal.
 
-!!! tip "Performance Tip"
-    For maximum performance, be specific with your patterns. Instead of `**/*.py`, use `src/**/*.py` when you know the target directory.
+## Where to go next
 
-!!! info "Community"
-    Found a bug or have a feature request? Visit our [GitHub repository](https://github.com/vexyart/vexy-glob) to open an issue or contribute!
+| Page | What it covers |
+| --- | --- |
+| [Installation](installation.md) | Installing from PyPI and from source |
+| [Quickstart](quickstart.md) | A first session, step by step |
+| [Patterns and case](patterns.md) | How glob patterns are matched against paths |
+| [Filters](filters.md) | Type, extension, exclude, size, time, depth, ignore files |
+| [Content search](content-search.md) | Regex search inside files and the result format |
+| [Command line](cli.md) | The `vg find` and `vg search` commands |
+| [Python API](api.md) | Every function, parameter and exception |
+| [Architecture](architecture.md) | How the Rust core and the Python layer fit together |
+| [Troubleshooting](troubleshooting.md) | Empty results, errors and surprises |
+| [Contributing](contributing.md) | Building, testing and releasing |

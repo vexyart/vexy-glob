@@ -82,3 +82,8 @@ flamegraph.svg
 *.trace
 target/profiling/
 target/fs_test_*/
+# Tooling
+.omc/
+.ruff_cache/
+node_modules/
+target/
