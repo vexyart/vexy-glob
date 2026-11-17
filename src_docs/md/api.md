@@ -1,3 +1,8 @@
+---
+this_file: src_docs/md/api.md
+tags: [API]
+---
+
 # Python API
 
 Everything public is exported from the `vexy_glob` package:

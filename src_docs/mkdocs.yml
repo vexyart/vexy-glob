@@ -45,19 +45,7 @@ markdown_extensions:
   - pymdownx.tabbed: {alternate_style: true}
   - pymdownx.tasklist: {custom_checkbox: true}
 plugins:
-  - search
-nav:
-  - Home: index.md
-  - Getting started:
-      - Installation: installation.md
-      - Quickstart: quickstart.md
-  - User guide:
-      - Patterns and case: patterns.md
-      - Filters: filters.md
-      - Content search: content-search.md
-      - Command line: cli.md
-  - Reference:
-      - Python API: api.md
-      - Architecture: architecture.md
-      - Troubleshooting: troubleshooting.md
-  - Contributing: contributing.md
+  - materialx/meta
+  - materialx/tags
+  - awesome-nav
+  - materialx/search

@@ -1,3 +1,8 @@
+---
+this_file: src_docs/md/cli.md
+tags: [Command line]
+---
+
 # Command line
 
 Installing the package adds a `vg` command with two subcommands, `find` and

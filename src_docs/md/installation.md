@@ -1,3 +1,8 @@
+---
+this_file: src_docs/md/installation.md
+tags: [Installation]
+---
+
 # Installation
 
 `vexy-glob` needs Python 3.8 or newer. The compiled part is a single extension

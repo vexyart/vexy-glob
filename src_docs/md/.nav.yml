@@ -1,0 +1,17 @@
+# this_file: src_docs/md/.nav.yml
+nav:
+  - Home: index.md
+  - Getting started:
+      - Installation: installation.md
+      - Quickstart: quickstart.md
+  - User guide:
+      - Patterns and case: patterns.md
+      - Filters: filters.md
+      - Content search: content-search.md
+      - Command line: cli.md
+  - Reference:
+      - Python API: api.md
+      - Architecture: architecture.md
+      - Troubleshooting: troubleshooting.md
+  - Contributing: contributing.md
+  - Topics: topics.md

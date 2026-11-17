@@ -220,3 +220,9 @@
 3. ⏳ Production release engineering (Phase 10)
 
 **Timeline**: 2-4 weeks to production v2.0.0 release
+
+## 2026-10-18: documentation plugins
+
+- Use MaterialX search, inherited metadata and a topic index; keep ordered navigation in awesome-nav.
+- The documentation wrapper installs the plugins required by this site.
+- Strict documentation build and rendered output checks passed.
