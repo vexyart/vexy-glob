@@ -1,4 +1,4 @@
-# vexy-glob
+# vexy-glob {data-toc-label="Overview"}
 
 `vexy-glob` finds files and searches their contents from Python. The work
 happens in a Rust extension module built on the `ignore` crate (the directory

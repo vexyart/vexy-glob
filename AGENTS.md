@@ -64,6 +64,12 @@ cargo fmt
 cargo clippy -- -D warnings
 ```
 
+### 2.5. Building the Documentation
+
+Run `./build.sh docs` to rebuild `docs/` in strict mode, or `src_docs/build.sh serve` for live preview.
+`src_docs/build.sh` pins the documentation dependencies. Configure fly-january 0.1.1 in
+`src_docs/mkdocs.yml` and keep `extra.fly.chrome` set to `none` for this unofficial site.
+
 ## 3. Architecture Overview
 
 ### 3.1. Core Components

@@ -76,7 +76,7 @@ The CI workflow runs `cargo fmt -- --check` and `cargo clippy -- -D warnings`.
 
 The documentation sources are the Markdown files in `src_docs/md/`, and the
 configuration is `src_docs/mkdocs.yml`. The site is built with ProperDocs and
-the MaterialX theme into `docs/`, which GitHub Pages serves at
+the fly-january 0.1.1 theme (`chrome: none`) into `docs/`, which GitHub Pages serves at
 <https://vexy.dev/vexy-glob/>.
 
 1. Preview with live reload:

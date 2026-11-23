@@ -972,15 +972,13 @@ The project uses a streamlined build system with automatic versioning from git t
 #### Quick Build
 
 ```bash
-# Build both wheel and source distribution
+# Build the documentation, wheel and source distribution
 ./build.sh
 ```
 
-This script will:
-1. Sync the version from git tags to `Cargo.toml`
-2. Build an optimized wheel for your platform
-3. Build a source distribution (sdist)
-4. Place all artifacts in the `dist/` directory
+Run `./build.sh docs` for a strict documentation build into `docs/`.
+The wrapper uses ProperDocs and fly-january 0.1.1 with `chrome: none`.
+Run `./build.sh package` to build the wheel and source distribution in `dist/`.
 
 #### Manual Build
 

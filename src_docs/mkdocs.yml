@@ -1,15 +1,15 @@
 # this_file: src_docs/mkdocs.yml
-site_name: vexy-glob
+site_name: Path Accelerated Finding in Rust
 site_description: Fast file finding and content search for Python, built on the Rust crates behind fd and ripgrep
 site_url: https://vexy.dev/vexy-glob/
 repo_url: https://github.com/vexyart/vexy-glob
-repo_name: vexyart/vexy-glob
+repo_name: GitHub
 edit_uri: edit/main/src_docs/md/
 docs_dir: md
 site_dir: ../docs
 use_directory_urls: true
 theme:
-  name: materialx
+  name: fly-january
   features:
     - navigation.sections
     - navigation.top
@@ -45,7 +45,11 @@ markdown_extensions:
   - pymdownx.tabbed: {alternate_style: true}
   - pymdownx.tasklist: {custom_checkbox: true}
 plugins:
-  - materialx/meta
-  - materialx/tags
+  - fly
+  - meta
+  - tags
   - awesome-nav
-  - materialx/search
+  - search
+extra:
+  fly:
+    chrome: none

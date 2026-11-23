@@ -226,3 +226,9 @@
 - Use MaterialX search, inherited metadata and a topic index; keep ordered navigation in awesome-nav.
 - The documentation wrapper installs the plugins required by this site.
 - Strict documentation build and rendered output checks passed.
+
+## 2026-11-24: documentation theme
+
+- Adopted fly-january 0.1.1 with `chrome: none`. The strict `./build.sh docs` build regenerated 13 HTML pages without warnings.
+- Verified the theme assets, neutral header, footer, navigation labels and stock favicon in the generated site.
+- Rust passed all 10 tests. Pytest passed 152 of 156. Clean HEAD reproduced the same four CLI failures in search errors, invalid sizes, broken pipes and interrupts.

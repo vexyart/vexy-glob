@@ -34,7 +34,7 @@ hits = list(vexy_glob.search("TODO", "*.py"))      # instead of as_list=True
 paths = list(vexy_glob.iglob("*.py"))              # instead of glob()
 ```
 
-## `ImportError: vexy_glob extension module not built`
+## `ImportError: vexy_glob extension module not built` {data-toc-label="Extension module import error"}
 
 The Python files were imported without the compiled module
 `vexy_glob/_vexy_glob.*`. This happens when you run Python from the root of a
@@ -78,7 +78,7 @@ Work through these causes in order:
 - Without `file_type`, directories and links are returned along with files.
   `find("*")` also returns the root itself (`.`).
 
-## `PatternError` or `VexyGlobError` on a regex
+## `PatternError` or `VexyGlobError` on a regex {data-toc-label="Invalid glob or regex"}
 
 - `PatternError: Invalid glob pattern: ...` means the glob (or an `exclude`
   entry) has a syntax error, often an unclosed `[` or `{`.
