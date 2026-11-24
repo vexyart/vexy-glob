@@ -4,7 +4,7 @@
 #    maturin stamps that version into every wheel and the sdist.
 # 2. linux / macos / windows / sdist: build abi3 wheels (one per platform,
 #    Python >= 3.8) and the sdist with PyO3/maturin-action.
-# 3. publish: upload everything to PyPI with uv publish (existing files are skipped).
+# 3. publish: upload to PyPI through Trusted Publishing with uv.
 # 4. github-release: create the GitHub release from the CHANGELOG section.
 # Wheel jobs follow the template from `maturin generate-ci github`.
 name: Release

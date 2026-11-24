@@ -157,15 +157,15 @@ script commits all of them.
     2. builds wheels for Linux (`x86_64`, `aarch64`), macOS (`x86_64`,
        `arm64`) and Windows (`x64`), and the source distribution, with
        `PyO3/maturin-action`;
-    3. uploads all files to PyPI with `uv publish`, skipping files that are
-       already there;
+    3. uploads the files through PyPI Trusted Publishing with
+       `uv publish --trusted-publishing always`, skipping files already on PyPI;
     4. creates the GitHub release.
 
 4. Check the result on <https://pypi.org/project/vexy-glob/>.
 
-The upload step needs PyPI credentials in the repository: either a
-`PYPI_API_TOKEN` secret, or a PyPI trusted publisher configured for the
-`vexyart/vexy-glob` repository and the `release.yml` workflow.
+Before releasing, configure a Trusted Publisher on the `vexy-glob` PyPI project
+for the `vexyart/vexy-glob` repository, the `release.yml` workflow and the
+`pypi` GitHub Actions environment. The workflow authenticates through OIDC.
 
 ### If something goes wrong
 

@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Site now uses the fly-january 0.2.1 theme (chrome: none)
 - Documentation moved to `src_docs/md/` and is published at https://vexy.dev/vexy-glob/.
-- `release.yml` builds multi-platform wheels and the sdist on `v*` tags; `publish.sh` bumps `Cargo.toml` to the next tag before `gitnextver`.
+- `release.yml` builds wheels and the sdist on `v*` tags. `publish.sh` sets the package version in `Cargo.toml` before `gitnextver`. PyPI published five ABI3 wheels and one sdist for `v1.0.13` (`fa37b33`).
+- PyPI publication uses Trusted Publishing (`0dc7778`). The owner needs to configure a Trusted Publisher for PyPI project `vexy-glob`, GitHub repository `vexyart/vexy-glob`, workflow `release.yml` and environment `pypi`.
 
 ### Added
 - **Regex Cache Effectiveness Profiling**
@@ -56,7 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Created debug_content_search.py and related tools for correctness validation
 
 ### Fixed
-- **Critical Performance Issues Resolution** 🚀 **MAJOR MILESTONE**
+- **Critical Performance Issues Resolution** 🚀 **MAJOR MILESTONE** (`b8b102d`, `test_cold_start_fix.py`, `test_content_search_performance.py`)
   - **Cold Start Variance**: Reduced from 111% CV to 14.8% CV (87% improvement)
     - Implemented global initialization system (`src/global_init.rs`)
     - Pre-initializes Rayon thread pool at module import
@@ -78,6 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.9] - 2025-08-05
 
 ### Added
+- Added native platform test harnesses and a result coordinator (`b8b102d`). The recorded macOS run reported 10 passing tests with APFS-specific assertions bypassed (`platform_test_results_darwin_1754350453.json`).
 - **Thread-Safe Pattern Caching System** ✅
   - Implemented LRU cache with Arc<RwLock<HashMap>> for concurrent pattern compilation access
   - Added pre-compilation of 50+ common file patterns (*.py, *.js, *.rs, etc.) at startup
@@ -220,9 +222,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - GitHub Actions workflow for multi-platform testing and builds
   - Cross-platform wheel building with cibuildwheel
   - Automated release workflow for GitHub and PyPI
-  - Dependabot configuration for dependency updates
+  - Weekly Dependabot checks for GitHub Actions and Cargo (`a72903b`, merged updates `decb434` and `8b6f7f0`).
   - Code coverage reporting with codecov integration
-  - Contributing guidelines documentation
+  - Added the contributor guide in `CONTRIBUTING.md` (`a72903b`).
 - Support for:
   - Fast file finding with glob patterns (1.8x faster than stdlib)
     - Gitignore file respect (when in git repositories)

@@ -1281,8 +1281,8 @@ script commits all of them.</p>
 <li>builds wheels for Linux (<code>x86_64</code>, <code>aarch64</code>), macOS (<code>x86_64</code>,
    <code>arm64</code>) and Windows (<code>x64</code>), and the source distribution, with
    <code>PyO3/maturin-action</code>;</li>
-<li>uploads all files to PyPI with <code>uv publish</code>, skipping files that are
-   already there;</li>
+<li>uploads the files through PyPI Trusted Publishing with
+   <code>uv publish --trusted-publishing always</code>, skipping files already on PyPI;</li>
 <li>creates the GitHub release.</li>
 </ol>
 </li>
@@ -1290,9 +1290,9 @@ script commits all of them.</p>
 <p>Check the result on <a href="https://pypi.org/project/vexy-glob/">https://pypi.org/project/vexy-glob/</a>.</p>
 </li>
 </ol>
-<p>The upload step needs PyPI credentials in the repository: either a
-<code>PYPI_API_TOKEN</code> secret, or a PyPI trusted publisher configured for the
-<code>vexyart/vexy-glob</code> repository and the <code>release.yml</code> workflow.</p>
+<p>Before releasing, configure a Trusted Publisher on the <code>vexy-glob</code> PyPI project
+for the <code>vexyart/vexy-glob</code> repository, the <code>release.yml</code> workflow and the
+<code>pypi</code> GitHub Actions environment. The workflow authenticates through OIDC.</p>
 <h3 id="if-something-goes-wrong">If something goes wrong<a aria-label="Permanent link" class="headerlink" href="#if-something-goes-wrong" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>The script stops before <code>gitnextver</code>.</strong> Nothing was committed or pushed.

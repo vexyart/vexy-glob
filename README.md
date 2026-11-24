@@ -1024,6 +1024,10 @@ git push origin v1.0.4
 
 The version will be automatically detected and used for both the Python package and Rust crate.
 
+For PyPI publishing, run `./publish.sh`. The tag starts `release.yml`, which
+uploads through Trusted Publishing. Configure the Trusted Publisher for
+`vexyart/vexy-glob`, workflow `release.yml`, and environment `pypi`.
+
 ### Project Structure
 
 ```

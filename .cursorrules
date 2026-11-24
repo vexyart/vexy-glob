@@ -125,7 +125,7 @@ cargo clippy -- -D warnings
 1. Update version in `Cargo.toml` and `pyproject.toml`
 2. Run full test suite including benchmarks
 3. Build wheels: `maturin build --release --strip`
-4. Upload to PyPI: `maturin publish`
+4. Run `./publish.sh` to push the release tag. The `release.yml` workflow uploads to PyPI through Trusted Publishing in the `pypi` environment.
 
 ## 6. Important Constraints
 

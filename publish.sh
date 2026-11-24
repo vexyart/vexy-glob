@@ -13,7 +13,7 @@
 #   5. checks that the new tag is the one computed in step 1.
 # The tag push starts .github/workflows/release.yml, which verifies that the
 # tag matches Cargo.toml, builds the Linux/macOS/Windows wheels and the sdist,
-# and uploads them to PyPI. Nothing is uploaded from this machine.
+# and uploads them to PyPI through Trusted Publishing.
 set -euo pipefail
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
 
@@ -47,4 +47,4 @@ made="$(git describe --tags --exact-match HEAD 2>/dev/null || true)"
 if [[ "$made" != "$tag" ]]; then
   die "expected HEAD to carry ${tag}, found '${made:-no tag}'. Cargo.toml says ${next}; fix the tag or Cargo.toml before CI publishes."
 fi
-echo "Pushed ${tag}. GitHub Actions (release.yml) now builds the wheels and uploads them to PyPI."
+echo "Pushed ${tag}. GitHub Actions (release.yml) now builds and publishes through PyPI Trusted Publishing."
