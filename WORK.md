@@ -229,6 +229,7 @@
 
 ## 2026-11-24: documentation theme
 
-- Adopted fly-january 0.1.1 with `chrome: none`. The strict `./build.sh docs` build regenerated 13 HTML pages without warnings.
+- The site uses fly-january 0.2.1 with `chrome: none`.
+- On adoption, the strict `./build.sh docs` build regenerated 13 HTML pages without warnings.
 - Verified the theme assets, neutral header, footer, navigation labels and stock favicon in the generated site.
 - Rust passed all 10 tests. Pytest passed 152 of 156. Clean HEAD reproduced the same four CLI failures in search errors, invalid sizes, broken pipes and interrupts.

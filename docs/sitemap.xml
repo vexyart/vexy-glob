@@ -2,62 +2,62 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>https://vexy.dev/vexy-glob/</loc>
-        <lastmod>2026-11-23</lastmod>
+        <lastmod>2026-11-24</lastmod>
         <changefreq>daily</changefreq>
     </url>
     <url>
         <loc>https://vexy.dev/vexy-glob/api/</loc>
-        <lastmod>2026-11-23</lastmod>
+        <lastmod>2026-11-24</lastmod>
         <changefreq>daily</changefreq>
     </url>
     <url>
         <loc>https://vexy.dev/vexy-glob/architecture/</loc>
-        <lastmod>2026-11-23</lastmod>
+        <lastmod>2026-11-24</lastmod>
         <changefreq>daily</changefreq>
     </url>
     <url>
         <loc>https://vexy.dev/vexy-glob/cli/</loc>
-        <lastmod>2026-11-23</lastmod>
+        <lastmod>2026-11-24</lastmod>
         <changefreq>daily</changefreq>
     </url>
     <url>
         <loc>https://vexy.dev/vexy-glob/content-search/</loc>
-        <lastmod>2026-11-23</lastmod>
+        <lastmod>2026-11-24</lastmod>
         <changefreq>daily</changefreq>
     </url>
     <url>
         <loc>https://vexy.dev/vexy-glob/contributing/</loc>
-        <lastmod>2026-11-23</lastmod>
+        <lastmod>2026-11-24</lastmod>
         <changefreq>daily</changefreq>
     </url>
     <url>
         <loc>https://vexy.dev/vexy-glob/filters/</loc>
-        <lastmod>2026-11-23</lastmod>
+        <lastmod>2026-11-24</lastmod>
         <changefreq>daily</changefreq>
     </url>
     <url>
         <loc>https://vexy.dev/vexy-glob/installation/</loc>
-        <lastmod>2026-11-23</lastmod>
+        <lastmod>2026-11-24</lastmod>
         <changefreq>daily</changefreq>
     </url>
     <url>
         <loc>https://vexy.dev/vexy-glob/patterns/</loc>
-        <lastmod>2026-11-23</lastmod>
+        <lastmod>2026-11-24</lastmod>
         <changefreq>daily</changefreq>
     </url>
     <url>
         <loc>https://vexy.dev/vexy-glob/quickstart/</loc>
-        <lastmod>2026-11-23</lastmod>
+        <lastmod>2026-11-24</lastmod>
         <changefreq>daily</changefreq>
     </url>
     <url>
         <loc>https://vexy.dev/vexy-glob/topics/</loc>
-        <lastmod>2026-11-23</lastmod>
+        <lastmod>2026-11-24</lastmod>
         <changefreq>daily</changefreq>
     </url>
     <url>
         <loc>https://vexy.dev/vexy-glob/troubleshooting/</loc>
-        <lastmod>2026-11-23</lastmod>
+        <lastmod>2026-11-24</lastmod>
         <changefreq>daily</changefreq>
     </url>
 </urlset>
