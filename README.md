@@ -977,7 +977,7 @@ The project uses a streamlined build system with automatic versioning from git t
 ```
 
 Run `./build.sh docs` for a strict documentation build into `docs/`.
-The wrapper uses ProperDocs and fly-january 0.3.0 or later with `chrome: none`.
+The wrapper uses ProperDocs and fly-january 0.4.0 or later (remote theme assets) with `chrome: none`.
 Run `./build.sh package` to build the wheel and source distribution in `dist/`.
 
 #### Manual Build
